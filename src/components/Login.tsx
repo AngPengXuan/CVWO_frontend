@@ -1,9 +1,17 @@
 import { useState } from "react";
 import axios from "axios";
+import { Navigate, useNavigate } from "react-router-dom";
 
-const Login = () => {
+type OnLoginFunction = () => void;
+
+interface LoginProps {
+  onLogin: OnLoginFunction;
+}
+
+const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -15,6 +23,8 @@ const Login = () => {
       // Store token in local storage or state for future use
       console.log("Login successful. Token:", token);
       localStorage.setItem("token", token);
+      onLogin();
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
     }
