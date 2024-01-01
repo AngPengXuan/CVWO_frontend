@@ -29,11 +29,19 @@ const NewPost: React.FC = () => {
 
     if (title.length == 0 || content.length == 0) return;
 
+    // const body = {
+    //   token: localStorage.getItem("token"),
+    //   title,
+    //   category,
+    //   content: stripHtmlEntities(content),
+    // };
     const body = {
       token: localStorage.getItem("token"),
-      title,
-      category,
-      content: stripHtmlEntities(content),
+      post: {
+        title,
+        category,
+        content: stripHtmlEntities(content),
+      },
     };
     console.log(JSON.stringify(body));
 

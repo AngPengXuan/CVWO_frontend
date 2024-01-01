@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 interface Post {
@@ -14,7 +14,7 @@ interface PostArray {
 
 const Posts = () => {
   const navigate = useNavigate();
-  const [posts, setPost] = useState<PostArray[]>([]);
+  const [postsArr, setPost] = useState<PostArray[]>([]);
 
   useEffect(() => {
     const url = "http://localhost:3000/api/v1/posts/index";
@@ -30,15 +30,15 @@ const Posts = () => {
       .catch(() => navigate("/"));
   }, []);
 
-  console.dir(posts);
+  console.dir(postsArr);
 
-  const allPosts = posts.map((post, index) => (
+  const allPosts = postsArr.map((res, index) => (
     <div key={index}>
       <h3>
-        <Link to={`/post/${post.post.id}`}>{post.post.title}</Link>
+        <Link to={`/post/${res.post.id}`}>{res.post.title}</Link>
       </h3>
-      <h5>{post.username}</h5>
-      <p>{post.post.content}</p>
+      <h5>{res.username}</h5>
+      <p>{res.post.content}</p>
     </div>
   ));
 
@@ -52,7 +52,7 @@ const Posts = () => {
 
   return (
     <>
-      <div>{posts.length > 0 ? allPosts : noPost}</div>
+      <div>{postsArr.length > 0 ? allPosts : noPost}</div>
     </>
   );
 };
