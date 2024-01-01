@@ -9,7 +9,7 @@ const Navbar: React.FC<LoginProps> = ({ login }: LoginProps) => {
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <a className="navbar-brand" href="#">
-          Navbar
+          Forum
         </a>
         <button
           className="navbar-toggler"
@@ -26,18 +26,13 @@ const Navbar: React.FC<LoginProps> = ({ login }: LoginProps) => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
-              <Link to="/" style={{ padding: "10px" }}>
-                Home
+              <Link to="/posts" style={{ padding: "10px" }}>
+                Posts
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/profile" style={{ padding: "10px" }}>
-                Profile
-              </Link>
-            </li>
-            <li className="nav-item active">
-              <Link to="/about" style={{ padding: "10px" }}>
-                About
+              <Link to="/new_post" style={{ padding: "10px" }}>
+                Create Post
               </Link>
             </li>
             {!login && (
@@ -51,6 +46,13 @@ const Navbar: React.FC<LoginProps> = ({ login }: LoginProps) => {
               <li className="nav-item active">
                 <Link to="/logout" style={{ padding: "10px" }}>
                   Logout
+                </Link>
+              </li>
+            )}
+            {!login && (
+              <li>
+                <Link to="/signup" style={{ padding: "10px" }}>
+                  Sign up
                 </Link>
               </li>
             )}

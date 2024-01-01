@@ -6,6 +6,7 @@ const NewPost: React.FC = () => {
   //   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
 
   //convert special characters to their escaped/encoded values respectively
   const stripHtmlEntities = (str: String) => {
@@ -31,8 +32,10 @@ const NewPost: React.FC = () => {
     const body = {
       token: localStorage.getItem("token"),
       title,
+      category,
       content: stripHtmlEntities(content),
     };
+    console.log(JSON.stringify(body));
 
     //need check if null
     const csrfTokenElement = document.querySelector(
@@ -54,7 +57,7 @@ const NewPost: React.FC = () => {
         }
         throw new Error("Network response was not ok.");
       })
-      .then((response) => navigate(`/recipe/${response.id}`))
+      .then((response) => navigate(`/post/${response.id}`))
       .catch((error) => console.log(error.message));
   };
 
@@ -65,20 +68,31 @@ const NewPost: React.FC = () => {
           <h1 className="font-weight-normal mb-5">Add a new post!</h1>
           <form onSubmit={onSubmit}>
             <div className="form-group">
-              <label htmlFor="recipetitle">Title</label>
+              <label htmlFor="posttitle">Title</label>
               <input
                 type="text"
                 name="title"
-                id="recipetitle"
+                id="posttitle"
                 className="form-control"
                 required
                 onChange={(event) => onChange(event, setTitle)}
               />
             </div>
-            <label htmlFor="content">Preparation contents</label>
+            <div>
+              <label htmlFor="postCategory">Category</label>
+              <input
+                type="text"
+                name="category"
+                id="postCategory"
+                className="form-control"
+                required
+                onChange={(event) => onChange(event, setCategory)}
+              />
+            </div>
+            <label htmlFor="postcontent">Content</label>
             <textarea
               className="form-control"
-              id="content"
+              id="postcontent"
               name="content"
               rows={5}
               required

@@ -1,21 +1,15 @@
-import { useState } from "react";
 import axios from "axios";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-type OnLoginFunction = () => void;
-
-interface LoginProps {
-  onLogin: OnLoginFunction;
-}
-
-const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
+const Signup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/login", {
+      const response = await axios.post("http://localhost:3000/signup", {
         username,
         password,
       });
@@ -23,10 +17,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
       // Store token in local storage or state for future use
       console.log("Login successful. Token:", token);
       localStorage.setItem("token", token);
-      onLogin();
-      navigate("/");
+      navigate("/login");
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Signup failed:", error);
     }
   };
 
@@ -47,4 +40,4 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   );
 };
 
-export default Login;
+export default Signup;
