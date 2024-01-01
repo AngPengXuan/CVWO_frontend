@@ -8,6 +8,8 @@ import Login from "./components/Login";
 import Posts from "./components/Posts";
 import NewPost from "./components/NewPost";
 import { useEffect, useState } from "react";
+import Signup from "./components/Signup";
+import Post from "./components/Post";
 function App() {
   const [loggedIn, setLoggedIn] = useState("token" in localStorage);
 
@@ -38,8 +40,17 @@ function App() {
           path="/logout"
           element={<LogoutFunction onLogout={handleLogin} />}
         />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/posts" element={<Posts />} />
-        <Route path="/new_post" element={<NewPost />} />
+        <Route path="/post/:id" element={<Post />} />
+        <Route
+          path="/new_post"
+          element={
+            <Protected>
+              <NewPost />
+            </Protected>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
