@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 interface Post {
@@ -7,8 +7,16 @@ interface Post {
   category: string;
 }
 
+interface Comment {
+  username: string;
+  content: string;
+  is_owner: boolean;
+  id: number;
+}
+
 interface Response {
   post: Post;
+  comments: Comment[];
   is_owner: boolean;
 }
 
@@ -20,6 +28,12 @@ const Post = () => {
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
   const [editedCategory, setEditedCategory] = useState("");
+  const [editableComment, setEditableComment] = useState(false);
+  const [editableCommentIndex, setEditableCommentIndex] = useState(-1);
+  const [editedContentComment, setEditedContentComment] = useState("");
+  const [editedCommentId, setEditedCommentId] = useState(-1);
+  const [content, setContent] = useState("");
+  const [comments, setComments] = useState<Comment[]>();
 
   const toggleEdit = () => {
     setEditable(!editable);
@@ -49,7 +63,7 @@ const Post = () => {
   ) as HTMLMetaElement;
   const csrfToken = csrfTokenElement && csrfTokenElement.content;
 
-  useEffect(() => {
+  const getRes = () => {
     console.dir(params.id);
     const url = `http://localhost:3000/api/v1/show/${params.id}`;
     fetch(url, {
@@ -62,7 +76,6 @@ const Post = () => {
     })
       .then((res) => {
         if (res.ok) {
-          //   console.dir(res.json());
           return res.json();
         }
         throw new Error("Network response was not ok");
@@ -73,6 +86,10 @@ const Post = () => {
         console.log(res);
       })
       .catch(() => navigate("/posts"));
+  };
+
+  useEffect(() => {
+    getRes();
   }, [params.id]);
 
   useEffect(() => {
@@ -80,6 +97,8 @@ const Post = () => {
       setEditedTitle(res.post.title);
       setEditedContent(res.post.content);
       setEditedCategory(res.post.category);
+      setComments(res.comments);
+      console.dir(comments);
     }
   }, [res]);
 
@@ -141,6 +160,7 @@ const Post = () => {
       .then((response) => {
         if (response.ok) {
           setEditable(false);
+          getRes();
           return response.json();
         }
         throw new Error("Network response was not ok.");
@@ -150,6 +170,138 @@ const Post = () => {
   };
 
   const postContent = res && addHtmlEntities(res.post.content);
+
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const url = "http://localhost:3000/api/v1/comments/create";
+
+    if (content.length == 0) return;
+
+    const commentBody = {
+      token: localStorage.getItem("token"),
+      comment: {
+        content: stripHtmlEntities(content),
+        post_id: params.id,
+      },
+    };
+    console.dir(commentBody);
+
+    //need check if null
+    const csrfTokenElement = document.querySelector(
+      'meta[name="csrf-token"]'
+    ) as HTMLMetaElement;
+    const csrfToken = csrfTokenElement && csrfTokenElement.content;
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": csrfToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(commentBody),
+    })
+      .then((response) => {
+        if (response.ok) {
+          setContent("");
+          getRes();
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((response) => {
+        console.log("navigating");
+        navigate(`/post/${response.id}`);
+      })
+      .catch((error) => console.log(error.message));
+  };
+
+  const deleteComment = (index: number) => {
+    return () => {
+      const url = `http://localhost:3000/api/v1/comment/destroy/${params.id}`;
+      const csrfTokenElement = document.querySelector(
+        'meta[name="csrf-token"]'
+      ) as HTMLMetaElement;
+      const token = csrfTokenElement && csrfTokenElement.content;
+
+      const commentBody = {
+        token: localStorage.getItem("token"),
+        comment: {
+          id: index,
+        },
+      };
+
+      fetch(url, {
+        method: "DELETE",
+        headers: {
+          "X-CSRF-Token": token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(commentBody),
+      })
+        .then((response) => {
+          if (response.ok) {
+            getRes();
+            return response.json();
+          }
+          throw new Error("Network response was not ok.");
+        })
+        .then(() => navigate(`/post/${params.id}`))
+        .catch((error) => console.log(error.message));
+    };
+  };
+
+  const saveChangesComment = () => {
+    const url = `http://localhost:3000/api/v1/comment/update/${params.id}`;
+    const csrfTokenElement = document.querySelector(
+      'meta[name="csrf-token"]'
+    ) as HTMLMetaElement;
+    const token = csrfTokenElement && csrfTokenElement.content;
+
+    const updatedBody = {
+      token: localStorage.getItem("token"),
+      comment: {
+        content: stripHtmlEntities(editedContentComment),
+        id: editedCommentId,
+      },
+    };
+
+    console.dir(JSON.stringify(updatedBody));
+
+    fetch(url, {
+      method: "PATCH",
+      headers: {
+        "X-CSRF-Token": token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedBody),
+    })
+      .then((response) => {
+        if (response.ok) {
+          setEditableComment(false);
+          getRes();
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((response) => navigate(`/post/${response.id}`))
+      .catch((error) => console.log(error.message));
+  };
+
+  const toggleEditComment = (index: number) => {
+    return () => {
+      if (comments && index >= 0) {
+        setEditableComment(!editableComment);
+        setEditableCommentIndex(index);
+        setEditedContentComment(comments[index].content);
+        setEditedCommentId(comments[index].id);
+      }
+    };
+  };
+
+  useEffect(() => {
+    console.log("comments updated!");
+    console.dir(comments);
+  }, [comments]);
 
   return (
     <div className="">
@@ -239,6 +391,76 @@ const Post = () => {
         <Link to="/posts" className="btn btn-link">
           Back to posts
         </Link>
+
+        <div>
+          {comments?.map((comment, index) => (
+            <div key={index}>
+              <span>Username: {comment.username}</span>
+              {editableCommentIndex == index && editableComment ? (
+                <textarea
+                  name="content"
+                  value={editedContentComment}
+                  onChange={(e) => {
+                    onChange(e, setEditedContentComment);
+                  }}
+                />
+              ) : (
+                <span>Content: {comment.content}</span>
+              )}
+              {comment.is_owner &&
+                (!editableComment || editableCommentIndex == index) && (
+                  <div className="col-sm-12 col-lg-2">
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      onClick={deleteComment(comment.id)}
+                    >
+                      Delete Comment
+                    </button>
+                    <br />
+                    <br />
+                    {editableCommentIndex == index && editableComment ? (
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={saveChangesComment}
+                      >
+                        Save Changes
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={toggleEditComment(index)}
+                      >
+                        Update Post
+                      </button>
+                    )}
+                  </div>
+                )}
+            </div>
+          ))}
+        </div>
+
+        {localStorage.hasOwnProperty("token") && (
+          <div>
+            <form onSubmit={onSubmit}>
+              <label htmlFor="postcontent">Content</label>
+              <textarea
+                className="form-control"
+                id="postcontent"
+                name="content"
+                rows={3}
+                required
+                value={content}
+                onChange={(event) => onChange(event, setContent)}
+              />
+              <button type="submit" className="btn custom-button mt-3">
+                Create Comment
+              </button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );
