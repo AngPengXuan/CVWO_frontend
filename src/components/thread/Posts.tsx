@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-interface Post {
-  title: string;
-  content: string;
-  id: BigInteger;
-}
+import { PostInterface } from "../interfaces";
 
 interface PostArray {
-  post: Post;
+  post: PostInterface;
   username: string;
 }
 

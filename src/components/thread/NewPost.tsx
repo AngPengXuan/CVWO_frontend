@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { sendRequest } from "../functions";
 
 const NewPost: React.FC = () => {
   const navigate = useNavigate();
@@ -29,12 +30,6 @@ const NewPost: React.FC = () => {
 
     if (title.length == 0 || content.length == 0) return;
 
-    // const body = {
-    //   token: localStorage.getItem("token"),
-    //   title,
-    //   category,
-    //   content: stripHtmlEntities(content),
-    // };
     const body = {
       token: localStorage.getItem("token"),
       post: {
@@ -45,26 +40,7 @@ const NewPost: React.FC = () => {
     };
     console.log(JSON.stringify(body));
 
-    //need check if null
-    const csrfTokenElement = document.querySelector(
-      'meta[name="csrf-token"]'
-    ) as HTMLMetaElement;
-    const csrfToken = csrfTokenElement && csrfTokenElement.content;
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": csrfToken,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
-      })
+    sendRequest(url, "POST", body)
       .then((response) => navigate(`/post/${response.id}`))
       .catch((error) => console.log(error.message));
   };
