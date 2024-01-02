@@ -20,6 +20,47 @@ interface Response {
   is_owner: boolean;
 }
 
+interface RequestData {
+  token: string | null;
+  comment?: {
+    content?: string;
+    post_id?: string | number | undefined;
+    id?: number;
+  };
+  post?: {
+    title: string;
+    category: string;
+    content: string;
+  };
+}
+
+const getCsrfToken = () => {
+  const csrfTokenElement = document.querySelector(
+    'meta[name="csrf-token"]'
+  ) as HTMLMetaElement;
+  return csrfTokenElement && csrfTokenElement.content;
+};
+
+const sendRequest = (url: string, method: string, data: RequestData) => {
+  const token = getCsrfToken();
+
+  return fetch(url, {
+    method,
+    headers: {
+      "X-CSRF-Token": token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error("Network response was not ok.");
+    })
+    .catch((error) => console.log(error.message));
+};
+
 const Post = () => {
   const params = useParams();
   const navigate = useNavigate();
@@ -57,29 +98,9 @@ const Post = () => {
       .replace(/>/g, "&gt;");
   };
 
-  //need check if null
-  const csrfTokenElement = document.querySelector(
-    'meta[name="csrf-token"]'
-  ) as HTMLMetaElement;
-  const csrfToken = csrfTokenElement && csrfTokenElement.content;
-
   const getRes = () => {
-    console.dir(params.id);
     const url = `http://localhost:3000/api/v1/show/${params.id}`;
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": csrfToken,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw new Error("Network response was not ok");
-      })
+    sendRequest(url, "POST", body)
       .then((res) => {
         console.log("hi");
         setRes(res);
@@ -108,36 +129,13 @@ const Post = () => {
 
   const deletePost = () => {
     const url = `http://localhost:3000/api/v1/destroy/${params.id}`;
-    const csrfTokenElement = document.querySelector(
-      'meta[name="csrf-token"]'
-    ) as HTMLMetaElement;
-    const token = csrfTokenElement && csrfTokenElement.content;
-
-    fetch(url, {
-      method: "DELETE",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
-      })
+    sendRequest(url, "DELETE", body)
       .then(() => navigate("/posts"))
       .catch((error) => console.log(error.message));
   };
 
   const saveChanges = () => {
     const url = `http://localhost:3000/api/v1/update/${params.id}`;
-    const csrfTokenElement = document.querySelector(
-      'meta[name="csrf-token"]'
-    ) as HTMLMetaElement;
-    const token = csrfTokenElement && csrfTokenElement.content;
-
     const updatedBody = {
       token: localStorage.getItem("token"),
       post: {
@@ -146,26 +144,12 @@ const Post = () => {
         content: stripHtmlEntities(editedContent),
       },
     };
-
-    console.dir(JSON.stringify(updatedBody));
-
-    fetch(url, {
-      method: "PATCH",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedBody),
-    })
+    sendRequest(url, "PATCH", updatedBody)
       .then((response) => {
-        if (response.ok) {
-          setEditable(false);
-          getRes();
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
+        setEditable(false);
+        getRes();
+        navigate(`/post/${response.id}`);
       })
-      .then((response) => navigate(`/post/${response.id}`))
       .catch((error) => console.log(error.message));
   };
 
@@ -184,31 +168,11 @@ const Post = () => {
         post_id: params.id,
       },
     };
-    console.dir(commentBody);
 
-    //need check if null
-    const csrfTokenElement = document.querySelector(
-      'meta[name="csrf-token"]'
-    ) as HTMLMetaElement;
-    const csrfToken = csrfTokenElement && csrfTokenElement.content;
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": csrfToken,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(commentBody),
-    })
+    sendRequest(url, "POST", commentBody)
       .then((response) => {
-        if (response.ok) {
-          setContent("");
-          getRes();
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
-      })
-      .then((response) => {
+        setContent("");
+        getRes();
         console.log("navigating");
         navigate(`/post/${response.id}`);
       })
@@ -218,45 +182,23 @@ const Post = () => {
   const deleteComment = (index: number) => {
     return () => {
       const url = `http://localhost:3000/api/v1/comment/destroy/${params.id}`;
-      const csrfTokenElement = document.querySelector(
-        'meta[name="csrf-token"]'
-      ) as HTMLMetaElement;
-      const token = csrfTokenElement && csrfTokenElement.content;
-
       const commentBody = {
         token: localStorage.getItem("token"),
         comment: {
           id: index,
         },
       };
-
-      fetch(url, {
-        method: "DELETE",
-        headers: {
-          "X-CSRF-Token": token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(commentBody),
-      })
-        .then((response) => {
-          if (response.ok) {
-            getRes();
-            return response.json();
-          }
-          throw new Error("Network response was not ok.");
+      sendRequest(url, "DELETE", commentBody)
+        .then(() => {
+          getRes();
+          navigate(`/post/${params.id}`);
         })
-        .then(() => navigate(`/post/${params.id}`))
         .catch((error) => console.log(error.message));
     };
   };
 
   const saveChangesComment = () => {
     const url = `http://localhost:3000/api/v1/comment/update/${params.id}`;
-    const csrfTokenElement = document.querySelector(
-      'meta[name="csrf-token"]'
-    ) as HTMLMetaElement;
-    const token = csrfTokenElement && csrfTokenElement.content;
-
     const updatedBody = {
       token: localStorage.getItem("token"),
       comment: {
@@ -264,26 +206,12 @@ const Post = () => {
         id: editedCommentId,
       },
     };
-
-    console.dir(JSON.stringify(updatedBody));
-
-    fetch(url, {
-      method: "PATCH",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedBody),
-    })
+    sendRequest(url, "PATCH", updatedBody)
       .then((response) => {
-        if (response.ok) {
-          setEditableComment(false);
-          getRes();
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
+        setEditableComment(false);
+        getRes();
+        navigate(`/post/${response.id}`);
       })
-      .then((response) => navigate(`/post/${response.id}`))
       .catch((error) => console.log(error.message));
   };
 
@@ -297,11 +225,6 @@ const Post = () => {
       }
     };
   };
-
-  useEffect(() => {
-    console.log("comments updated!");
-    console.dir(comments);
-  }, [comments]);
 
   return (
     <div className="">
