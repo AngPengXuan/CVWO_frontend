@@ -2,6 +2,16 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ResponseInterface, CommentInterface } from "../interfaces";
 import { sendRequest } from "../functions";
+import {
+  Button,
+  Card,
+  CardContent,
+  Menu,
+  MenuItem,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 
 const Post = () => {
   const params = useParams();
@@ -17,8 +27,39 @@ const Post = () => {
   const [editedCommentId, setEditedCommentId] = useState(-1);
   const [content, setContent] = useState("");
   const [comments, setComments] = useState<CommentInterface[]>();
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [anchorElComments, setAnchorElComments] = useState(
+    Array(comments?.length).fill(null)
+  );
+
+  const handleCommentsSettingClick =
+    (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
+      const newAnchorEls = [...anchorElComments];
+      newAnchorEls[index] = event.currentTarget;
+      setAnchorElComments(newAnchorEls);
+    };
+
+  const handleCommentsSettingClose = (index: number) => () => {
+    const newAnchorEls = [...anchorElComments];
+    newAnchorEls[index] = null;
+    setAnchorElComments(newAnchorEls);
+  };
+
+  const handleCloseAllCommentsSettings = () => {
+    const newAnchorEls = anchorElComments.map(() => null);
+    setAnchorElComments(newAnchorEls);
+  };
+
+  const handleSettingClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleSettingClose = () => {
+    setAnchorEl(null);
+  };
 
   const toggleEdit = () => {
+    handleSettingClose();
     setEditable(!editable);
   };
 
@@ -112,17 +153,19 @@ const Post = () => {
     };
 
     sendRequest(url, "POST", commentBody)
-      .then((response) => {
+      .then(() => {
         setContent("");
         getRes();
         console.log("navigating");
-        navigate(`/post/${response.id}`);
+        // navigate(`/post/${response.id}`);
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) => console.log(error));
   };
 
   const deleteComment = (index: number) => {
     return () => {
+      console.log("delete");
+      handleCloseAllCommentsSettings();
       const url = `http://localhost:3000/api/v1/comment/destroy/${params.id}`;
       const commentBody = {
         token: localStorage.getItem("token"),
@@ -159,6 +202,7 @@ const Post = () => {
 
   const toggleEditComment = (index: number) => {
     return () => {
+      handleCommentsSettingClose(index)();
       if (comments && index >= 0) {
         setEditableComment(!editableComment);
         setEditableCommentIndex(index);
@@ -169,29 +213,61 @@ const Post = () => {
   };
 
   return (
-    <div className="">
-      <div className="container py-5">
-        <div className="row">
-          <div className="col-sm-12 col-lg-3">
-            <ul className="list-group">
-              <h5 className="mb-2">Title</h5>
-              {editable ? (
+    <>
+      <Card
+        style={{
+          width: "40vw",
+          margin: "auto",
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {res?.is_owner && (
+          <>
+            <div
+              style={{
+                alignSelf: "flex-end",
+              }}
+            >
+              <IconButton onClick={handleSettingClick}>
+                <MoreVertSharpIcon />
+              </IconButton>
+            </div>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleSettingClose}
+            >
+              <MenuItem onClick={deletePost}>Delete</MenuItem>
+              <MenuItem onClick={toggleEdit}>Edit</MenuItem>
+            </Menu>
+          </>
+        )}
+        <CardContent>
+          <Typography component="p">{"Viewing thread:"}</Typography>
+          <Typography variant="h4" component="h4">
+            {editable ? (
+              <>
+                {"Title:"}
+                <br />
                 <textarea
                   name="title"
                   value={editedTitle}
                   onChange={(e) => {
                     onChange(e, setEditedTitle);
                   }}
-                />
-              ) : (
-                <span>{res && res.post.title}</span>
-              )}
-            </ul>
-          </div>
-          <div className="col-sm-12 col-lg-3">
-            <ul className="list-group">
-              <h5 className="mb-2">Category</h5>
-              {editable ? (
+                />{" "}
+              </>
+            ) : (
+              <span>{res && res.post.title}</span>
+            )}
+          </Typography>
+          <Typography variant="body1" component="p">
+            {editable ? (
+              <>
+                {"Category:"}
+                <br />
                 <textarea
                   name="category"
                   value={editedCategory}
@@ -199,135 +275,127 @@ const Post = () => {
                     onChange(e, setEditedCategory);
                   }}
                 />
-              ) : (
-                <span>{res && res.post.category}</span>
-              )}
-            </ul>
-          </div>
-          <div className="col-sm-12 col-lg-7">
-            <h5 className="mb-2">Content</h5>
-            {editable ? (
-              <textarea
-                name="content"
-                value={editedContent}
-                onChange={(e) => {
-                  onChange(e, setEditedContent);
-                }}
-              />
+              </>
             ) : (
-              <div
+              <span>{res && res.post.category}</span>
+            )}
+          </Typography>
+          <Typography color="textSecondary" gutterBottom>
+            {res && res.post.username}
+          </Typography>
+          <Typography variant="body2" component="p">
+            {editable ? (
+              <>
+                {"Content:"}
+                <br />
+                <textarea
+                  name="content"
+                  value={editedContent}
+                  onChange={(e) => {
+                    onChange(e, setEditedContent);
+                  }}
+                />
+              </>
+            ) : (
+              <span
                 dangerouslySetInnerHTML={{
                   __html: `${postContent}`,
                 }}
               />
             )}
-          </div>
-          {res && res.is_owner && (
-            <div className="col-sm-12 col-lg-2">
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={deletePost}
+          </Typography>
+        </CardContent>
+        {editable && (
+          <Button onClick={saveChanges} variant="contained" color="success">
+            Save Changes
+          </Button>
+        )}
+      </Card>
+      <div className="">
+        <div className="container py-5">
+          <div>
+            {comments?.map((comment, index) => (
+              <Card
+                key={index}
+                style={{
+                  width: "40vw",
+                  margin: "auto",
+                  textAlign: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
-                Delete Post
-              </button>
-              <br />
-              <br />
-              {editable ? (
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={saveChanges}
-                >
-                  Save Changes
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={toggleEdit}
-                >
-                  Update Post
-                </button>
-              )}
+                {comment.is_owner && (
+                  <>
+                    <div
+                      style={{
+                        alignSelf: "flex-end",
+                      }}
+                    >
+                      <IconButton onClick={handleCommentsSettingClick(index)}>
+                        <MoreVertSharpIcon />
+                      </IconButton>
+                    </div>
+                    <Menu
+                      anchorEl={anchorElComments[index]}
+                      open={Boolean(anchorElComments[index])}
+                      onClose={handleCommentsSettingClose(index)}
+                    >
+                      <MenuItem onClick={deleteComment(comment.id)}>
+                        Delete
+                      </MenuItem>
+                      <MenuItem onClick={toggleEditComment(index)}>
+                        Edit
+                      </MenuItem>
+                    </Menu>{" "}
+                  </>
+                )}
+                <CardContent>
+                  <Typography color="textSecondary" gutterBottom>
+                    {comment.username}
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    {editableCommentIndex == index && editableComment ? (
+                      <textarea
+                        name="content"
+                        value={editedContentComment}
+                        onChange={(e) => {
+                          onChange(e, setEditedContentComment);
+                        }}
+                      />
+                    ) : (
+                      <span>{comment.content}</span>
+                    )}
+                  </Typography>
+                  {editableCommentIndex == index && editableComment && (
+                    <Button onClick={saveChangesComment}>Save</Button>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {localStorage.hasOwnProperty("token") && (
+            <div>
+              <form onSubmit={onSubmit}>
+                <label htmlFor="postcontent">Content</label>
+                <textarea
+                  className="form-control"
+                  id="postcontent"
+                  name="content"
+                  rows={3}
+                  required
+                  value={content}
+                  onChange={(event) => onChange(event, setContent)}
+                />
+
+                <Button type="submit">Create Comment</Button>
+              </form>
             </div>
           )}
         </div>
-        <Link to="/posts" className="btn btn-link">
-          Back to posts
-        </Link>
-
-        <div>
-          {comments?.map((comment, index) => (
-            <div key={index}>
-              <span>Username: {comment.username}</span>
-              {editableCommentIndex == index && editableComment ? (
-                <textarea
-                  name="content"
-                  value={editedContentComment}
-                  onChange={(e) => {
-                    onChange(e, setEditedContentComment);
-                  }}
-                />
-              ) : (
-                <span>Content: {comment.content}</span>
-              )}
-              {comment.is_owner &&
-                (!editableComment || editableCommentIndex == index) && (
-                  <div className="col-sm-12 col-lg-2">
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={deleteComment(comment.id)}
-                    >
-                      Delete Comment
-                    </button>
-                    <br />
-                    <br />
-                    {editableCommentIndex == index && editableComment ? (
-                      <button
-                        type="button"
-                        className="btn btn-success"
-                        onClick={saveChangesComment}
-                      >
-                        Save Changes
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={toggleEditComment(index)}
-                      >
-                        Update Post
-                      </button>
-                    )}
-                  </div>
-                )}
-            </div>
-          ))}
-        </div>
-
-        {localStorage.hasOwnProperty("token") && (
-          <div>
-            <form onSubmit={onSubmit}>
-              <label htmlFor="postcontent">Content</label>
-              <textarea
-                className="form-control"
-                id="postcontent"
-                name="content"
-                rows={3}
-                required
-                value={content}
-                onChange={(event) => onChange(event, setContent)}
-              />
-              <button type="submit" className="btn custom-button mt-3">
-                Create Comment
-              </button>
-            </form>
-          </div>
-        )}
       </div>
-    </div>
+    </>
   );
 };
 

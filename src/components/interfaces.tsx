@@ -3,6 +3,7 @@ export interface PostInterface {
   content: string;
   category: string;
   id: number;
+  username?: string;
 }
 
 export interface CommentInterface {
