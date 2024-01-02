@@ -1,70 +1,12 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-
-interface Post {
-  title: string;
-  content: string;
-  category: string;
-}
-
-interface Comment {
-  username: string;
-  content: string;
-  is_owner: boolean;
-  id: number;
-}
-
-interface Response {
-  post: Post;
-  comments: Comment[];
-  is_owner: boolean;
-}
-
-interface RequestData {
-  token: string | null;
-  comment?: {
-    content?: string;
-    post_id?: string | number | undefined;
-    id?: number;
-  };
-  post?: {
-    title: string;
-    category: string;
-    content: string;
-  };
-}
-
-const getCsrfToken = () => {
-  const csrfTokenElement = document.querySelector(
-    'meta[name="csrf-token"]'
-  ) as HTMLMetaElement;
-  return csrfTokenElement && csrfTokenElement.content;
-};
-
-const sendRequest = (url: string, method: string, data: RequestData) => {
-  const token = getCsrfToken();
-
-  return fetch(url, {
-    method,
-    headers: {
-      "X-CSRF-Token": token,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error("Network response was not ok.");
-    })
-    .catch((error) => console.log(error.message));
-};
+import { ResponseInterface, CommentInterface } from "../interfaces";
+import { sendRequest } from "../functions";
 
 const Post = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const [res, setRes] = useState<Response>();
+  const [res, setRes] = useState<ResponseInterface>();
   const [editable, setEditable] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
@@ -74,7 +16,7 @@ const Post = () => {
   const [editedContentComment, setEditedContentComment] = useState("");
   const [editedCommentId, setEditedCommentId] = useState(-1);
   const [content, setContent] = useState("");
-  const [comments, setComments] = useState<Comment[]>();
+  const [comments, setComments] = useState<CommentInterface[]>();
 
   const toggleEdit = () => {
     setEditable(!editable);
