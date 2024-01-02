@@ -30,11 +30,13 @@ const Navbar: React.FC<LoginProps> = ({ login }: LoginProps) => {
                 Posts
               </Link>
             </li>
-            <li className="nav-item">
-              <Link to="/new_post" style={{ padding: "10px" }}>
-                Create Post
-              </Link>
-            </li>
+            {login && (
+              <li className="nav-item">
+                <Link to="/new_post" style={{ padding: "10px" }}>
+                  Create Post
+                </Link>
+              </li>
+            )}
             {!login && (
               <li className="nav-item active">
                 <Link to="/login" style={{ padding: "10px" }}>
