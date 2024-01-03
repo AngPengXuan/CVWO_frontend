@@ -24,6 +24,7 @@ yarn run dev
 6. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
 
 ## Additional Notes
+-   This project uses [Typescript](https://www.typescriptlang.org/).
 
 ## Acknowledgements
 
