@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { sendRequest } from "../../components/functions";
 import { LoginProps } from "../../components/interfaces";
 import Authentication from "../../components/Authentication";
-import { sendRequest } from "../../components/functions";
 import { Grid } from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";
 
-const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
+const Register: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const usernameState = useState("");
   const passwordState = useState("");
   const [username] = usernameState;
@@ -16,23 +16,23 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const body = {
     user: { username: username, password: password },
   };
-
   const handleLogin = () => {
-    sendRequest(backendLinks.login, "POST", body)
+    sendRequest(backendLinks.register, "POST", body)
       .then((res) => {
         const token = res.token;
-        console.log("Login successful. Token:", token);
+        console.log("Register successful. Token:", token);
         localStorage.setItem("token", token);
         onLogin();
         navigate("/posts");
       })
       .catch((err) => {
-        console.error("Login failed:", err);
+        console.error("Signup failed:", err);
       });
   };
+
   const gridItem = (
     <Grid item>
-      <Link to="/register">Don't have an account? Register</Link>
+      <Link to="/login">Already have an account? Login</Link>
     </Grid>
   );
 
@@ -41,10 +41,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
       handle={handleLogin}
       usernameState={usernameState}
       passwordState={passwordState}
-      text="Login"
+      text="Register"
       gridItem={gridItem}
     ></Authentication>
   );
 };
 
-export default Login;
+export default Register;

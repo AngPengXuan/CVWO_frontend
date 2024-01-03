@@ -1,13 +1,13 @@
 import { Routes, Route, BrowserRouter, useNavigate } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Appbar";
 import Protected from "./pages/authentication/Protected";
-import Login from "./pages/authentication/Login";
 import Posts from "./pages/thread/Posts";
 import NewPost from "./pages/thread/NewPost";
 import { useEffect, useState } from "react";
-import Signup from "./pages/authentication/Signup";
 import Post from "./pages/thread/Post";
 import { LogoutProps } from "./components/interfaces";
+import Login from "./pages/authentication/Login";
+import Register from "./pages/authentication/Register";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState("token" in localStorage);
@@ -26,7 +26,7 @@ function App() {
           path="/logout"
           element={<LogoutFunction onLogout={handleLogin} />}
         />
-        <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
+        <Route path="/register" element={<Register onLogin={handleLogin} />} />
         <Route path="/posts" element={<Posts />} />
         <Route path="/post/:id" element={<Post />} />
         <Route

@@ -1,6 +1,7 @@
-import axios from "axios";
 import React, { ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { sendRequest } from "../../components/functions";
+import { backendLinks } from "../../utils/BackendConfig";
 
 interface ProtectedProps {
   children: ReactNode;
@@ -12,8 +13,7 @@ const Protected: React.FC<ProtectedProps> = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      axios
-        .post("http://localhost:3000/validate_token", { token })
+      sendRequest(backendLinks.validate_token, "POST", { token })
         .then(() => setIsAuthenticated(true))
         .catch(() => {
           setIsAuthenticated(false);

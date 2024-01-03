@@ -41,3 +41,11 @@ export const stripHtmlEntities = (str: string) => {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 };
+
+export const handleKeypress = (func: () => void) => {
+  return (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      func();
+    }
+  };
+};

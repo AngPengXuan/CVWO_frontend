@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 import CommentItem from "../../components/CommentItem";
+import { backendLinks } from "../../utils/BackendConfig";
 
 const Post = () => {
   const params = useParams();
@@ -54,7 +55,7 @@ const Post = () => {
   };
 
   const getRes = () => {
-    const url = `http://localhost:3000/api/v1/show/${params.id}`;
+    const url = backendLinks.show_thread + params.id;
     sendRequest(url, "POST", body)
       .then((res) => {
         console.log("hi");
@@ -83,14 +84,14 @@ const Post = () => {
   };
 
   const deletePost = () => {
-    const url = `http://localhost:3000/api/v1/destroy/${params.id}`;
+    const url = backendLinks.destroy_thread + params.id;
     sendRequest(url, "DELETE", body)
       .then(() => navigate("/posts"))
       .catch((error) => console.log(error.message));
   };
 
   const saveChanges = () => {
-    const url = `http://localhost:3000/api/v1/update/${params.id}`;
+    const url = backendLinks.update_thread + params.id;
     const updatedBody = {
       token: localStorage.getItem("token"),
       post: {
@@ -112,8 +113,6 @@ const Post = () => {
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const url = "http://localhost:3000/api/v1/comments/create";
-
     if (content.length == 0) return;
 
     const commentBody = {
@@ -124,7 +123,7 @@ const Post = () => {
       },
     };
 
-    sendRequest(url, "POST", commentBody)
+    sendRequest(backendLinks.create_comment, "POST", commentBody)
       .then(() => {
         setContent("");
         getRes();

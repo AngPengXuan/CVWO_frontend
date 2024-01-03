@@ -13,6 +13,7 @@ import { CommentInterface } from "./interfaces";
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 import { onChange, sendRequest, stripHtmlEntities } from "./functions";
 import { useNavigate } from "react-router-dom";
+import { backendLinks } from "../utils/BackendConfig";
 
 const useStyles = makeStyles(() => ({
   commentBody: {
@@ -62,17 +63,6 @@ const CommentItem: React.FC<Props> = ({
     setAnchorEl(null);
   };
 
-  //   const toggleEditComment = (index: number) => {
-  //     return () => {
-  //         handleSettingClose();
-  //       if (comments && index >= 0) {
-  //         setEditableComment(!editableComment);
-  //         // setEditableCommentIndex(index);
-  //         setEditedContentComment(comment.content);
-  //         // setEditedCommentId(comments[index].id);
-  //       }
-  //     };
-  //   };
   const toggleEditComment = () => {
     handleSettingClose();
     setEditableComment(!editableComment);
@@ -80,7 +70,6 @@ const CommentItem: React.FC<Props> = ({
   };
 
   const saveChangesComment = () => {
-    const url = `http://localhost:3000/api/v1/comment/update`;
     const updatedBody = {
       token: localStorage.getItem("token"),
       comment: {
@@ -88,7 +77,7 @@ const CommentItem: React.FC<Props> = ({
         id: comment.id,
       },
     };
-    sendRequest(url, "PATCH", updatedBody)
+    sendRequest(backendLinks.update_comment, "PATCH", updatedBody)
       .then((response) => {
         setEditableComment(false);
         getRes();
@@ -101,17 +90,15 @@ const CommentItem: React.FC<Props> = ({
     return () => {
       console.log("delete");
       handleSettingClose();
-      const url = `http://localhost:3000/api/v1/comment/destroy`;
       const commentBody = {
         token: localStorage.getItem("token"),
         comment: {
           id: index,
         },
       };
-      sendRequest(url, "DELETE", commentBody)
+      sendRequest(backendLinks.delete_comment, "DELETE", commentBody)
         .then(() => {
           getRes();
-          //   navigate(`/post/${params.id}`);
         })
         .catch((error) => console.log(error.message));
     };
