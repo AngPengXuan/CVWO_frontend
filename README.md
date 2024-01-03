@@ -1,30 +1,33 @@
-# React + TypeScript + Vite
+# CVWO assignment backend (Work in Progress)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimal implementation of the assignment, a forum that users can register and login, and perform basic CRUD operations for forum threads and comments.
 
-Currently, two official plugins are available:
+The frontend has been deployed using Netlify [here](https://melodious-choux-dce252.netlify.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## Expanding the ESLint configuration
+### Running the app
+1. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository) this repo.
+2. [Clone](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository) **your** forked repo.
+3. Open your terminal and navigate to the directory containing your cloned project.
+4. Install dependencies for the project by entering this command:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+```bash
+yarn install
+```
+5. Run the app in development mode by entering this command:
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+yarn run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+6. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+
+## Additional Notes
+
+## Acknowledgements
+
+This project was bootstrapped with [Create Vite](https://github.com/vitejs/vite/tree/main/packages/create-vite).
+This project uses [MUI](https://mui.com/),
+[TypewriterJS](https://github.com/tameemsafi/typewriterjs#readme), [Prettier](https://prettier.io/).
+
