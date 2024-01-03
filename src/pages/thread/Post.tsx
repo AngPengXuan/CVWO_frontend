@@ -1,7 +1,10 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { ResponseInterface, CommentInterface } from "../interfaces";
-import { sendRequest } from "../functions";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  ResponseInterface,
+  CommentInterface,
+} from "../../components/interfaces";
+import { sendRequest, stripHtmlEntities } from "../../components/functions";
 import {
   Button,
   Card,
@@ -12,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
+import CommentItem from "../../components/CommentItem";
 
 const Post = () => {
   const params = useParams();
@@ -21,34 +25,9 @@ const Post = () => {
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
   const [editedCategory, setEditedCategory] = useState("");
-  const [editableComment, setEditableComment] = useState(false);
-  const [editableCommentIndex, setEditableCommentIndex] = useState(-1);
-  const [editedContentComment, setEditedContentComment] = useState("");
-  const [editedCommentId, setEditedCommentId] = useState(-1);
   const [content, setContent] = useState("");
   const [comments, setComments] = useState<CommentInterface[]>();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [anchorElComments, setAnchorElComments] = useState(
-    Array(comments?.length).fill(null)
-  );
-
-  const handleCommentsSettingClick =
-    (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
-      const newAnchorEls = [...anchorElComments];
-      newAnchorEls[index] = event.currentTarget;
-      setAnchorElComments(newAnchorEls);
-    };
-
-  const handleCommentsSettingClose = (index: number) => () => {
-    const newAnchorEls = [...anchorElComments];
-    newAnchorEls[index] = null;
-    setAnchorElComments(newAnchorEls);
-  };
-
-  const handleCloseAllCommentsSettings = () => {
-    const newAnchorEls = anchorElComments.map(() => null);
-    setAnchorElComments(newAnchorEls);
-  };
 
   const handleSettingClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -72,13 +51,6 @@ const Post = () => {
 
   const body = {
     token: localStorage.getItem("token"),
-  };
-
-  const stripHtmlEntities = (str: string) => {
-    return String(str)
-      .replace(/\n/g, "<br> <br>")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
   };
 
   const getRes = () => {
@@ -160,56 +132,6 @@ const Post = () => {
         // navigate(`/post/${response.id}`);
       })
       .catch((error) => console.log(error));
-  };
-
-  const deleteComment = (index: number) => {
-    return () => {
-      console.log("delete");
-      handleCloseAllCommentsSettings();
-      const url = `http://localhost:3000/api/v1/comment/destroy/${params.id}`;
-      const commentBody = {
-        token: localStorage.getItem("token"),
-        comment: {
-          id: index,
-        },
-      };
-      sendRequest(url, "DELETE", commentBody)
-        .then(() => {
-          getRes();
-          navigate(`/post/${params.id}`);
-        })
-        .catch((error) => console.log(error.message));
-    };
-  };
-
-  const saveChangesComment = () => {
-    const url = `http://localhost:3000/api/v1/comment/update/${params.id}`;
-    const updatedBody = {
-      token: localStorage.getItem("token"),
-      comment: {
-        content: stripHtmlEntities(editedContentComment),
-        id: editedCommentId,
-      },
-    };
-    sendRequest(url, "PATCH", updatedBody)
-      .then((response) => {
-        setEditableComment(false);
-        getRes();
-        navigate(`/post/${response.id}`);
-      })
-      .catch((error) => console.log(error.message));
-  };
-
-  const toggleEditComment = (index: number) => {
-    return () => {
-      handleCommentsSettingClose(index)();
-      if (comments && index >= 0) {
-        setEditableComment(!editableComment);
-        setEditableCommentIndex(index);
-        setEditedContentComment(comments[index].content);
-        setEditedCommentId(comments[index].id);
-      }
-    };
   };
 
   return (
@@ -315,63 +237,11 @@ const Post = () => {
         <div className="container py-5">
           <div>
             {comments?.map((comment, index) => (
-              <Card
+              <CommentItem
+                comment={comment}
+                getRes={getRes}
                 key={index}
-                style={{
-                  width: "40vw",
-                  margin: "auto",
-                  textAlign: "center",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                {comment.is_owner && (
-                  <>
-                    <div
-                      style={{
-                        alignSelf: "flex-end",
-                      }}
-                    >
-                      <IconButton onClick={handleCommentsSettingClick(index)}>
-                        <MoreVertSharpIcon />
-                      </IconButton>
-                    </div>
-                    <Menu
-                      anchorEl={anchorElComments[index]}
-                      open={Boolean(anchorElComments[index])}
-                      onClose={handleCommentsSettingClose(index)}
-                    >
-                      <MenuItem onClick={deleteComment(comment.id)}>
-                        Delete
-                      </MenuItem>
-                      <MenuItem onClick={toggleEditComment(index)}>
-                        Edit
-                      </MenuItem>
-                    </Menu>{" "}
-                  </>
-                )}
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
-                    {comment.username}
-                  </Typography>
-                  <Typography variant="body2" component="p">
-                    {editableCommentIndex == index && editableComment ? (
-                      <textarea
-                        name="content"
-                        value={editedContentComment}
-                        onChange={(e) => {
-                          onChange(e, setEditedContentComment);
-                        }}
-                      />
-                    ) : (
-                      <span>{comment.content}</span>
-                    )}
-                  </Typography>
-                  {editableCommentIndex == index && editableComment && (
-                    <Button onClick={saveChangesComment}>Save</Button>
-                  )}
-                </CardContent>
-              </Card>
+              ></CommentItem>
             ))}
           </div>
 

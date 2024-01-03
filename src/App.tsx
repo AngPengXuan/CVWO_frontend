@@ -1,12 +1,12 @@
 import { Routes, Route, BrowserRouter, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Protected from "./components/authentication/Protected";
-import Login from "./components/authentication/Login";
-import Posts from "./components/thread/Posts";
-import NewPost from "./components/thread/NewPost";
+import Protected from "./pages/authentication/Protected";
+import Login from "./pages/authentication/Login";
+import Posts from "./pages/thread/Posts";
+import NewPost from "./pages/thread/NewPost";
 import { useEffect, useState } from "react";
-import Signup from "./components/authentication/Signup";
-import Post from "./components/thread/Post";
+import Signup from "./pages/authentication/Signup";
+import Post from "./pages/thread/Post";
 import { LogoutProps } from "./components/interfaces";
 
 function App() {
