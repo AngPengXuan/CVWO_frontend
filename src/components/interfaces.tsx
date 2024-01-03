@@ -11,6 +11,7 @@ export interface CommentInterface {
   content: string;
   is_owner: boolean;
   id: number;
+  created_at: Date;
 }
 
 export interface ResponseInterface {

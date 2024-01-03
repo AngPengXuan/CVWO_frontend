@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendRequest } from "../functions";
-import { LoginProps } from "../interfaces";
+import { sendRequest } from "../../components/functions";
+import { LoginProps } from "../../components/interfaces";
 
 const Signup: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const [username, setUsername] = useState("");

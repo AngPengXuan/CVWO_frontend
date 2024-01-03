@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { PostInterface } from "../interfaces";
+import { PostInterface } from "../../components/interfaces";
 import { Card, CardContent, Typography } from "@mui/material";
 
 interface PostArray {

@@ -1,4 +1,5 @@
 import { RequestData } from "./interfaces";
+import { ChangeEvent } from "react";
 
 const getCsrfToken = () => {
   const csrfTokenElement = document.querySelector(
@@ -25,4 +26,18 @@ export const sendRequest = (url: string, method: string, data: RequestData) => {
       throw new Error("Network response was not ok.");
     })
     .catch((error) => console.log(error.message));
+};
+
+export const onChange = (
+  event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  setFunction: React.Dispatch<React.SetStateAction<string>>
+) => {
+  setFunction(event.target.value);
+};
+
+export const stripHtmlEntities = (str: string) => {
+  return String(str)
+    .replace(/\n/g, "<br> <br>")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 };
