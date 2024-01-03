@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   CardContent,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
@@ -22,8 +23,8 @@ const useStyles = makeStyles(() => ({
     paddingBottom: "1em",
   },
   commentCard: {
-    width: "40vw",
-    textAlign: "center",
+    // width: "40vw",
+    // textAlign: "center",
     margin: "auto",
     display: "flex",
     flexDirection: "column",
@@ -35,20 +36,10 @@ const useStyles = makeStyles(() => ({
 
 type Props = {
   comment: CommentInterface;
-  //   index: number;
-  //   deleteComment: (id: number) => () => void;
-  //   toggleEditComment: (index: number) => () => void;
-  //   saveChangesComment: () => void;
   getRes: () => void;
 };
 
-const CommentItem: React.FC<Props> = ({
-  comment,
-  //   index,
-  //   deleteComment,
-  //   saveChangesComment,
-  getRes,
-}) => {
+const CommentItem: React.FC<Props> = ({ comment, getRes }) => {
   const [editableComment, setEditableComment] = useState(false);
   const [editedContentComment, setEditedContentComment] = useState("");
   const classes = useStyles();
@@ -105,55 +96,59 @@ const CommentItem: React.FC<Props> = ({
   };
 
   return (
-    <Card className={classes.commentCard}>
-      {comment.is_owner && (
-        <>
-          <div
-            style={{
-              alignSelf: "flex-end",
-            }}
-          >
-            <IconButton onClick={handleSettingClick}>
-              <MoreVertSharpIcon />
-            </IconButton>
-          </div>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleSettingClose}
-          >
-            <MenuItem onClick={deleteComment(comment.id)}>Delete</MenuItem>
-            <MenuItem onClick={toggleEditComment}>Edit</MenuItem>
-          </Menu>{" "}
-        </>
-      )}
-      <CardContent>
-        <Typography variant="body2" component="p">
-          {editableComment ? (
-            <textarea
-              name="content"
-              value={editedContentComment}
-              onChange={(e) => {
-                onChange(e, setEditedContentComment);
+    <Grid item xs={6} sx={{ mb: 1 }}>
+      <Card className={classes.commentCard}>
+        {comment.is_owner && (
+          <>
+            <div
+              style={{
+                alignSelf: "flex-end",
               }}
-            />
-          ) : (
-            <span>{comment.content}</span>
+            >
+              <IconButton onClick={handleSettingClick}>
+                <MoreVertSharpIcon />
+              </IconButton>
+            </div>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleSettingClose}
+            >
+              <MenuItem onClick={deleteComment(comment.id)}>Delete</MenuItem>
+              <MenuItem onClick={toggleEditComment}>Edit</MenuItem>
+            </Menu>{" "}
+          </>
+        )}
+        <CardContent>
+          <Typography variant="body2" component="p">
+            {editableComment ? (
+              <textarea
+                name="content"
+                value={editedContentComment}
+                onChange={(e) => {
+                  onChange(e, setEditedContentComment);
+                }}
+              />
+            ) : (
+              <span>{comment.content}</span>
+            )}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            className={classes.metadata}
+            gutterBottom
+          >
+            {"Posted by " +
+              comment.username +
+              " on " +
+              comment.created_at.toLocaleString()}
+          </Typography>
+          {editableComment && (
+            <Button onClick={saveChangesComment}>Save</Button>
           )}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          className={classes.metadata}
-          gutterBottom
-        >
-          {"Posted by " +
-            comment.username +
-            " on " +
-            comment.created_at.toLocaleString()}
-        </Typography>
-        {editableComment && <Button onClick={saveChangesComment}>Save</Button>}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 };
 

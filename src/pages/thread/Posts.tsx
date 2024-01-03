@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { PostInterface } from "../../components/interfaces";
-import { Card, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";
 
 interface PostArray {
@@ -29,19 +36,23 @@ const Posts = () => {
   console.dir(postsArr);
 
   const allPosts = postsArr.map((res, index) => (
-    <Card key={index}>
-      <CardContent>
-        <Typography variant="h5" component="h5">
-          <Link to={`/post/${res.post.id}`}>{res.post.title}</Link>
-        </Typography>
-        <Typography color="textSecondary" gutterBottom>
-          {res.username}
-        </Typography>
-        <Typography variant="body2" component="p">
-          {res.post.content}
-        </Typography>
-      </CardContent>
-    </Card>
+    <Grid item xs={12} key={index} sx={{ mb: 3 }}>
+      <Card key={index}>
+        <CardActionArea href={`/post/${res.post.id}`}>
+          <CardContent>
+            <Typography variant="h5" component="h5">
+              {res.post.title}
+            </Typography>
+            <Typography color="textSecondary" gutterBottom>
+              {res.username}
+            </Typography>
+            <Typography variant="body2" component="p">
+              {res.post.content}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </Grid>
   ));
 
   const noPost = (
@@ -54,9 +65,7 @@ const Posts = () => {
 
   return (
     <>
-      <div style={{ width: "30vw", margin: "auto", textAlign: "center" }}>
-        {postsArr.length > 0 ? allPosts : noPost}
-      </div>
+      <Box sx={{ px: 5 }}>{postsArr.length > 0 ? allPosts : noPost}</Box>
     </>
   );
 };
