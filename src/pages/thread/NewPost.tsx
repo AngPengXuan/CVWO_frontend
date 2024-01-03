@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { sendRequest } from "../../components/functions";
+import { backendLinks } from "../../utils/BackendConfig";
 
 const NewPost: React.FC = () => {
   const navigate = useNavigate();
@@ -26,8 +27,6 @@ const NewPost: React.FC = () => {
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const url = "http://localhost:3000/api/v1/posts/create";
-
     if (title.length == 0 || content.length == 0) return;
 
     const body = {
@@ -40,7 +39,7 @@ const NewPost: React.FC = () => {
     };
     console.log(JSON.stringify(body));
 
-    sendRequest(url, "POST", body)
+    sendRequest(backendLinks.create_thread, "POST", body)
       .then((response) => navigate(`/post/${response.id}`))
       .catch((error) => console.log(error.message));
   };

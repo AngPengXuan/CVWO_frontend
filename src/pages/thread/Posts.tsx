@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { PostInterface } from "../../components/interfaces";
 import { Card, CardContent, Typography } from "@mui/material";
+import { backendLinks } from "../../utils/BackendConfig";
 
 interface PostArray {
   post: PostInterface;
@@ -13,8 +14,7 @@ const Posts = () => {
   const [postsArr, setPost] = useState<PostArray[]>([]);
 
   useEffect(() => {
-    const url = "http://localhost:3000/api/v1/posts/index";
-    fetch(url)
+    fetch(backendLinks.show_all_thread)
       .then((res) => {
         if (res.ok) {
           console.dir(res);
@@ -29,13 +29,6 @@ const Posts = () => {
   console.dir(postsArr);
 
   const allPosts = postsArr.map((res, index) => (
-    // <div key={index}>
-    //   <h3>
-    //     <Link to={`/post/${res.post.id}`}>{res.post.title}</Link>
-    //   </h3>
-    //   <h5>{res.username}</h5>
-    //   <p>{res.post.content}</p>
-    // </div>
     <Card key={index}>
       <CardContent>
         <Typography variant="h5" component="h5">

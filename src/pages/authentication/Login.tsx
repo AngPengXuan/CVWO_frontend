@@ -4,6 +4,7 @@ import { LoginProps } from "../../components/interfaces";
 import Authentication from "../../components/Authentication";
 import { sendRequest } from "../../components/functions";
 import { Grid } from "@mui/material";
+import { backendLinks } from "../../utils/BackendConfig";
 
 const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const usernameState = useState("");
@@ -12,14 +13,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const [password] = passwordState;
   const navigate = useNavigate();
 
-  const url = "http://localhost:3000/login";
-
   const body = {
     user: { username: username, password: password },
   };
 
   const handleLogin = () => {
-    sendRequest(url, "POST", body)
+    sendRequest(backendLinks.login, "POST", body)
       .then((res) => {
         const token = res.token;
         console.log("Login successful. Token:", token);

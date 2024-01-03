@@ -4,6 +4,7 @@ import { sendRequest } from "../../components/functions";
 import { LoginProps } from "../../components/interfaces";
 import Authentication from "../../components/Authentication";
 import { Grid } from "@mui/material";
+import { backendLinks } from "../../utils/BackendConfig";
 
 const Register: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const usernameState = useState("");
@@ -15,10 +16,8 @@ const Register: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const body = {
     user: { username: username, password: password },
   };
-
-  const url = "http://localhost:3000/signup";
   const handleLogin = () => {
-    sendRequest(url, "POST", body)
+    sendRequest(backendLinks.register, "POST", body)
       .then((res) => {
         const token = res.token;
         console.log("Register successful. Token:", token);
