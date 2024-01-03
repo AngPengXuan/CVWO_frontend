@@ -4,6 +4,7 @@ export interface PostInterface {
   category: string;
   id: number;
   username?: string;
+  created_at: Date;
 }
 
 export interface CommentInterface {

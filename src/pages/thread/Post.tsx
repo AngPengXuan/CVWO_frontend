@@ -13,6 +13,8 @@ import {
   MenuItem,
   IconButton,
   Typography,
+  Box,
+  TextField,
 } from "@mui/material";
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 import CommentItem from "../../components/CommentItem";
@@ -134,14 +136,13 @@ const Post = () => {
   };
 
   return (
-    <>
+    <Box sx={{ px: 5 }}>
       <Card
         style={{
-          width: "40vw",
           margin: "auto",
-          textAlign: "center",
           display: "flex",
           flexDirection: "column",
+          marginBottom: "20px",
         }}
       >
         {res?.is_owner && (
@@ -201,9 +202,6 @@ const Post = () => {
               <span>{res && res.post.category}</span>
             )}
           </Typography>
-          <Typography color="textSecondary" gutterBottom>
-            {res && res.post.username}
-          </Typography>
           <Typography variant="body2" component="p">
             {editable ? (
               <>
@@ -225,6 +223,13 @@ const Post = () => {
               />
             )}
           </Typography>
+          <Typography color="textSecondary" gutterBottom>
+            {"Posted by " +
+              res?.post.username +
+              " on " +
+              res?.post.created_at.toLocaleString()}
+            {res && res.post.username}
+          </Typography>
         </CardContent>
         {editable && (
           <Button onClick={saveChanges} variant="contained" color="success">
@@ -232,39 +237,35 @@ const Post = () => {
           </Button>
         )}
       </Card>
-      <div className="">
-        <div className="container py-5">
-          <div>
-            {comments?.map((comment, index) => (
-              <CommentItem
-                comment={comment}
-                getRes={getRes}
-                key={index}
-              ></CommentItem>
-            ))}
-          </div>
-
-          {localStorage.hasOwnProperty("token") && (
-            <div>
-              <form onSubmit={onSubmit}>
-                <label htmlFor="postcontent">Content</label>
-                <textarea
-                  className="form-control"
-                  id="postcontent"
-                  name="content"
-                  rows={3}
-                  required
-                  value={content}
-                  onChange={(event) => onChange(event, setContent)}
-                />
-
-                <Button type="submit">Create Comment</Button>
-              </form>
-            </div>
-          )}
-        </div>
+      <div>
+        {comments?.map((comment, index) => (
+          <CommentItem
+            comment={comment}
+            getRes={getRes}
+            key={index}
+          ></CommentItem>
+        ))}
       </div>
-    </>
+      {localStorage.hasOwnProperty("token") && (
+        <Box component="div">
+          <form onSubmit={onSubmit}>
+            <TextField
+              id="postcontent"
+              name="content"
+              minRows={3}
+              required
+              value={content}
+              onChange={(event) => onChange(event, setContent)}
+              style={{ width: "100%", resize: "vertical" }}
+              sx={{ pb: 2 }}
+            />
+            <Button type="submit" variant="contained" color="primary">
+              Reply
+            </Button>
+          </form>
+        </Box>
+      )}
+    </Box>
   );
 };
 
