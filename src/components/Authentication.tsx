@@ -33,13 +33,6 @@ const Authentication: React.FC<Props> = ({
   const [username, setUsername] = usernameState;
   const [password, setPassword] = passwordState;
 
-  //   const handleKeypress = (e: React.KeyboardEvent, func: () => void) => {
-  //     //it triggers by pressing the enter key
-  //     if (e.key === "Enter") {
-  //       func();
-  //     }
-  //   };
-
   return (
     <Container maxWidth="xs">
       <CssBaseline />

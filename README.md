@@ -25,6 +25,7 @@ yarn run dev
 
 ## Additional Notes
 -   This project uses [Typescript](https://www.typescriptlang.org/).
+-   Authentication page design was referenced from the following tutorial: [Create a simple React app (TypeScript) with Login / Register pages](https://medium.com/@prabhashi.mm/create-a-simple-react-app-typescript-with-login-register-pages-using-create-react-app-e5c12dd6db53)
 
 ## Acknowledgements
 
