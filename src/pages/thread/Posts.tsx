@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { PostInterface } from "../../components/interfaces";
 import {
@@ -10,15 +10,21 @@ import {
   Typography,
 } from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";
+import { PostAdd } from "@mui/icons-material";
 
-interface PostArray {
+interface PostProps {
+  searchValue: string;
+}
+
+interface PostInfo {
   post: PostInterface;
   username: string;
 }
 
-const Posts = () => {
+const Posts: React.FC<PostProps> = ({ searchValue }) => {
   const navigate = useNavigate();
-  const [postsArr, setPost] = useState<PostArray[]>([]);
+  const [postsArr, setPost] = useState<PostInfo[]>([]);
+  const [filteredPostsArr, setFilteredPostArr] = useState<PostInfo[]>([]);
 
   useEffect(() => {
     fetch(backendLinks.show_all_thread)
@@ -29,13 +35,28 @@ const Posts = () => {
         }
         throw new Error("Network response was not ok.");
       })
-      .then((res) => setPost(res))
+      .then((res) => {
+        setPost(res);
+        setFilteredPostArr(res);
+      })
       .catch(() => navigate("/"));
   }, []);
 
   console.dir(postsArr);
 
-  const allPosts = postsArr.map((res, index) => (
+  useEffect(() => {
+    const filteredPosts = postsArr.filter(
+      (postInfo) =>
+        postInfo.post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        postInfo.post.content
+          .toLowerCase()
+          .includes(searchValue.toLowerCase()) ||
+        postInfo.post.category.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredPostArr(filteredPosts);
+  }, [searchValue]);
+
+  const allPosts = filteredPostsArr.map((res, index) => (
     <Grid item xs={12} key={index} sx={{ mb: 3 }}>
       <Card key={index}>
         <CardActionArea href={`/post/${res.post.id}`}>
@@ -65,7 +86,9 @@ const Posts = () => {
 
   return (
     <>
-      <Box sx={{ px: 5 }}>{postsArr.length > 0 ? allPosts : noPost}</Box>
+      <Box sx={{ px: 5 }}>
+        {filteredPostsArr.length > 0 ? allPosts : noPost}
+      </Box>
     </>
   );
 };

@@ -16,18 +16,30 @@ function App() {
     setLoggedIn("token" in localStorage);
   };
 
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    console.log(inputValue);
+    setSearchValue(inputValue);
+  };
+
   return (
     <BrowserRouter>
-      <Navbar login={loggedIn} />
+      <Navbar
+        login={loggedIn}
+        handleSearch={handleSearch}
+        searchValue={searchValue}
+      />
       <Routes>
-        <Route path="/" element={<Posts />} />
+        <Route path="/" element={<Posts searchValue={searchValue} />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route
           path="/logout"
           element={<LogoutFunction onLogout={handleLogin} />}
         />
         <Route path="/register" element={<Register onLogin={handleLogin} />} />
-        <Route path="/posts" element={<Posts />} />
+        <Route path="/posts" element={<Posts searchValue={searchValue} />} />
         <Route path="/post/:id" element={<Post />} />
         <Route
           path="/new_post"

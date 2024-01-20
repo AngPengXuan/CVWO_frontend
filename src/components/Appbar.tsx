@@ -15,16 +15,26 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { Search, SearchIconWrapper, StyledInputBase } from "./SearchBar";
+import SearchIcon from "@mui/icons-material/Search";
 
-interface LoginProps {
+interface AppbarProps {
   login: Boolean;
   window?: () => Window;
+  handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  searchValue: String;
 }
 
 const drawerWidth = 240;
 
-const Navbar: React.FC<LoginProps> = ({ login, window }: LoginProps) => {
+const Navbar: React.FC<AppbarProps> = ({
+  login,
+  window,
+  handleSearch,
+  searchValue,
+}: AppbarProps) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -58,7 +68,7 @@ const Navbar: React.FC<LoginProps> = ({ login, window }: LoginProps) => {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ flexGrow: 1 }}>
       <CssBaseline />
       <AppBar component="nav" position="static">
         <Toolbar>
@@ -78,6 +88,17 @@ const Navbar: React.FC<LoginProps> = ({ login, window }: LoginProps) => {
           >
             {forumName}
           </Typography>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+              onChange={handleSearch}
+              value={searchValue}
+            />
+          </Search>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navLinks.map(([item, link]) => (
               <Button key={item} sx={{ color: "#fff" }} href={link}>
