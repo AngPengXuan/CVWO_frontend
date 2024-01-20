@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";
-import { PostAdd } from "@mui/icons-material";
 
 interface PostProps {
   searchValue: string;
