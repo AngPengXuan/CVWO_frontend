@@ -1,5 +1,4 @@
-// const backendLink = "http://localhost:3000/";
-const backendLink = "https://cvwo-backend-2voo.onrender.com/"
+import { backendLink } from "./DeploymentConfig";
 
 export const backendLinks = {
     login: backendLink + "login",

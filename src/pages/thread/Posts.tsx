@@ -60,11 +60,14 @@ const Posts: React.FC<PostProps> = ({ searchValue }) => {
       <Card key={index}>
         <CardActionArea href={`/post/${res.post.id}`}>
           <CardContent>
-            <Typography variant="h5" component="h5">
+            <Typography variant="h5" component="h5" fontWeight="bold">
               {res.post.title}
             </Typography>
             <Typography color="textSecondary" gutterBottom>
-              {res.username}
+              by: {res.username}
+            </Typography>
+            <Typography color="textSecondary" gutterBottom>
+              category: {res.post.category}
             </Typography>
             <Typography variant="body2" component="p">
               {res.post.content}
