@@ -228,7 +228,6 @@ const Post = () => {
               res?.post.username +
               " on " +
               res?.post.created_at.toLocaleString()}
-            {res && res.post.username}
           </Typography>
         </CardContent>
         {editable && (
