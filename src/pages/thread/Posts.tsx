@@ -13,6 +13,8 @@ import { backendLinks } from "../../utils/BackendConfig";
 
 interface PostProps {
   searchValue: string;
+  sortOption: string;
+  sortOptions: Array<string>;
 }
 
 interface PostInfo {
@@ -20,7 +22,11 @@ interface PostInfo {
   username: string;
 }
 
-const Posts: React.FC<PostProps> = ({ searchValue }) => {
+const Posts: React.FC<PostProps> = ({
+  searchValue,
+  sortOption,
+  sortOptions,
+}) => {
   const navigate = useNavigate();
   const [postsArr, setPost] = useState<PostInfo[]>([]);
   const [filteredPostsArr, setFilteredPostArr] = useState<PostInfo[]>([]);
@@ -55,6 +61,22 @@ const Posts: React.FC<PostProps> = ({ searchValue }) => {
     setFilteredPostArr(filteredPosts);
   }, [searchValue]);
 
+  useEffect(() => {
+    const sortedPosts = postsArr.slice().sort((postInfoA, postInfoB) => {
+      const dateA = new Date(postInfoA.post.created_at);
+      const dateB = new Date(postInfoB.post.created_at);
+
+      // Compare the dates
+      if (sortOption == sortOptions[0]) {
+        return dateB.getTime() - dateA.getTime();
+      } else if (sortOption == sortOptions[1]) {
+        return dateA.getTime() - dateB.getTime();
+      }
+      return 0;
+    });
+    setFilteredPostArr(sortedPosts);
+  }, [sortOption]);
+
   const allPosts = filteredPostsArr.map((res, index) => (
     <Grid item xs={12} key={index} sx={{ mb: 3 }}>
       <Card key={index}>
@@ -64,7 +86,7 @@ const Posts: React.FC<PostProps> = ({ searchValue }) => {
               {res.post.title}
             </Typography>
             <Typography color="textSecondary" gutterBottom>
-              by: {res.username}
+              posted by {res.username} on {res.post.created_at.toLocaleString()}
             </Typography>
             <Typography color="textSecondary" gutterBottom>
               category: {res.post.category}

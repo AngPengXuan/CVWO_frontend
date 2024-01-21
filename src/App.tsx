@@ -8,6 +8,7 @@ import Post from "./pages/thread/Post";
 import { LogoutProps } from "./components/interfaces";
 import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
+import { SelectChangeEvent } from "@mui/material";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState("token" in localStorage);
@@ -24,22 +25,55 @@ function App() {
     setSearchValue(inputValue);
   };
 
+  const sortOptions = [
+    "date \u2193",
+    "date \u2191",
+    "rating \u2193",
+    "rating \u2191",
+  ];
+  //sets default value as da (date ascending)
+  const [sortOption, setSortOption] = useState(sortOptions[0]);
+  const handleSort = (event: SelectChangeEvent) => {
+    setSortOption(event.target.value as string);
+  };
+
   return (
     <BrowserRouter>
       <Navbar
         login={loggedIn}
         handleSearch={handleSearch}
         searchValue={searchValue}
+        sortOption={sortOption}
+        handleSort={handleSort}
+        sortOptions={sortOptions}
       />
       <Routes>
-        <Route path="/" element={<Posts searchValue={searchValue} />} />
+        <Route
+          path="/"
+          element={
+            <Posts
+              searchValue={searchValue}
+              sortOption={sortOption}
+              sortOptions={sortOptions}
+            />
+          }
+        />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route
           path="/logout"
           element={<LogoutFunction onLogout={handleLogin} />}
         />
         <Route path="/register" element={<Register onLogin={handleLogin} />} />
-        <Route path="/posts" element={<Posts searchValue={searchValue} />} />
+        <Route
+          path="/posts"
+          element={
+            <Posts
+              searchValue={searchValue}
+              sortOption={sortOption}
+              sortOptions={sortOptions}
+            />
+          }
+        />
         <Route path="/post/:id" element={<Post />} />
         <Route
           path="/new_post"

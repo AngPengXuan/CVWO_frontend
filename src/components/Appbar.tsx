@@ -9,10 +9,14 @@ import {
   CssBaseline,
   Divider,
   Drawer,
+  InputLabel,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Typography,
 } from "@mui/material";
 import { Search, SearchIconWrapper, StyledInputBase } from "./SearchBar";
@@ -22,7 +26,10 @@ interface AppbarProps {
   login: Boolean;
   window?: () => Window;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  searchValue: String;
+  handleSort: (event: SelectChangeEvent) => void;
+  searchValue: string;
+  sortOption: string;
+  sortOptions: Array<string>;
 }
 
 const drawerWidth = 240;
@@ -31,7 +38,10 @@ const Navbar: React.FC<AppbarProps> = ({
   login,
   window,
   handleSearch,
+  handleSort,
+  sortOption,
   searchValue,
+  sortOptions,
 }: AppbarProps) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -88,6 +98,26 @@ const Navbar: React.FC<AppbarProps> = ({
           >
             {forumName}
           </Typography>
+          <InputLabel id="demo-simple-select-label" style={{ color: "white" }}>
+            Sort by:
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={sortOption}
+            label="Sort"
+            onChange={handleSort}
+            style={{ color: "white" }}
+          >
+            {/* <MenuItem value={"da"}>{"date \u2191"}</MenuItem>
+            <MenuItem value={"dd"}>date descending</MenuItem>
+            <MenuItem value={"ra"}>rating ascending</MenuItem> */}
+            {sortOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
