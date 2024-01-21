@@ -5,6 +5,8 @@ export interface PostInterface {
   id: number;
   username?: string;
   created_at: Date;
+  like_count: number;
+  dislike_count: number;
 }
 
 export interface CommentInterface {

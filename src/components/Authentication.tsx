@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
 import React from "react";
-import { handleKeypress } from "./functions";
+import { handleKeypress } from "./Functions";
 
 // The Authentication page design is referenced from:
 // https://medium.com/@prabhashi.mm/create-a-simple-react-app-typescript-with-login-register-pages-using-create-react-app-e5c12dd6db53

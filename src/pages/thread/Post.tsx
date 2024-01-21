@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   ResponseInterface,
   CommentInterface,
-} from "../../components/interfaces";
-import { sendRequest, stripHtmlEntities } from "../../components/functions";
+} from "../../components/Interfaces";
+import { sendRequest, stripHtmlEntities } from "../../components/Functions";
 import {
   Button,
   Card,

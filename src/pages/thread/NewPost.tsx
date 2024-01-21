@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendRequest } from "../../components/functions";
+import { sendRequest } from "../../components/Functions";
 import { backendLinks } from "../../utils/BackendConfig";
 import { Box, Button, TextField, Typography, Link, Grid } from "@mui/material";
 

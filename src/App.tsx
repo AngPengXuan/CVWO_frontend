@@ -5,7 +5,7 @@ import Posts from "./pages/thread/Posts";
 import NewPost from "./pages/thread/NewPost";
 import { useEffect, useState } from "react";
 import Post from "./pages/thread/Post";
-import { LogoutProps } from "./components/interfaces";
+import { LogoutProps } from "./components/Interfaces";
 import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
 import { SelectChangeEvent } from "@mui/material";

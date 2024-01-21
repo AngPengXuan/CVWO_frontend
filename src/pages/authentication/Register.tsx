@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { sendRequest } from "../../components/functions";
-import { LoginProps } from "../../components/interfaces";
+import { sendRequest } from "../../components/Functions";
+import { LoginProps } from "../../components/Interfaces";
 import Authentication from "../../components/Authentication";
 import { Grid } from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";

@@ -10,11 +10,12 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
-import { CommentInterface } from "./interfaces";
+import { CommentInterface } from "./Interfaces";
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
-import { onChange, sendRequest, stripHtmlEntities } from "./functions";
+import { onChange, sendRequest, stripHtmlEntities } from "./Functions";
 import { useNavigate } from "react-router-dom";
 import { backendLinks } from "../utils/BackendConfig";
+import RatingItem from "./Rating";
 
 const useStyles = makeStyles(() => ({
   commentBody: {
@@ -138,7 +139,7 @@ const CommentItem: React.FC<Props> = ({ comment, getRes }) => {
             className={classes.metadata}
             gutterBottom
           >
-            {"Posted by " +
+            {"posted by " +
               comment.username +
               " on " +
               comment.created_at.toLocaleString()}
@@ -146,6 +147,7 @@ const CommentItem: React.FC<Props> = ({ comment, getRes }) => {
           {editableComment && (
             <Button onClick={saveChangesComment}>Save</Button>
           )}
+          <RatingItem />
         </CardContent>
       </Card>
     </Grid>

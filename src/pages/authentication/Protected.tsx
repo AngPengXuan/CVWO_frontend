@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { sendRequest } from "../../components/functions";
+import { sendRequest } from "../../components/Functions";
 import { backendLinks } from "../../utils/BackendConfig";
 
 interface ProtectedProps {

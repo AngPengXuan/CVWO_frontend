@@ -1,4 +1,4 @@
-import { RequestData } from "./interfaces";
+import { RequestData } from "./Interfaces";
 import { ChangeEvent } from "react";
 
 const getCsrfToken = () => {

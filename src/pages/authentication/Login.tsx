@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginProps } from "../../components/interfaces";
+import { LoginProps } from "../../components/Interfaces";
 import Authentication from "../../components/Authentication";
-import { sendRequest } from "../../components/functions";
+import { sendRequest } from "../../components/Functions";
 import { Grid } from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";
 

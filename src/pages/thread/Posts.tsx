@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { PostInterface } from "../../components/interfaces";
+import { PostInterface } from "../../components/Interfaces";
 import {
   Box,
   Card,
