@@ -18,8 +18,14 @@ interface PostProps {
   sortOptions: Array<string>;
 }
 
+interface RatingInterface {
+  user_id: number;
+  rating: number;
+}
+
 interface PostInfo {
   post: PostInterface;
+  ratings: Array<RatingInterface>;
   username: string;
 }
 
@@ -73,9 +79,27 @@ const Posts: React.FC<PostProps> = ({
       } else if (sortOption == sortOptions[1]) {
         return dateA.getTime() - dateB.getTime();
       } else if (sortOption == sortOptions[2]) {
-        return postInfoB.post.like_count - postInfoA.post.like_count;
+        return (
+          postInfoB.ratings.reduce(
+            (accumulator, currVal) => accumulator + currVal.rating,
+            0
+          ) -
+          postInfoA.ratings.reduce(
+            (accumulator, currVal) => accumulator + currVal.rating,
+            0
+          )
+        );
       } else if (sortOption == sortOptions[3]) {
-        return postInfoA.post.like_count - postInfoB.post.like_count;
+        return (
+          postInfoA.ratings.reduce(
+            (accumulator, currVal) => accumulator + currVal.rating,
+            0
+          ) -
+          postInfoB.ratings.reduce(
+            (accumulator, currVal) => accumulator + currVal.rating,
+            0
+          )
+        );
       }
       return 0;
     });
