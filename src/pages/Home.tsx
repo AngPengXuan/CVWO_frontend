@@ -57,7 +57,11 @@ const Home = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               onClick={() => {
-                navigate("/login");
+                if (localStorage.getItem("token") == null) {
+                  navigate("/login");
+                } else {
+                  navigate("/posts");
+                }
               }}
             >
               {"Login"}
