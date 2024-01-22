@@ -32,6 +32,10 @@ const RatingItem: React.FC<Props> = ({ post_id, posts }) => {
   const postId = post_id || Number(params.id);
   const onThumbUpClick = (rating: number) => {
     return () => {
+      if (token == null) {
+        alert("You must be logged in to vote!");
+        return;
+      }
       const updatedBody = {
         post_rating: {
           user_token: token,
@@ -51,6 +55,10 @@ const RatingItem: React.FC<Props> = ({ post_id, posts }) => {
 
   const onThumbDownClick = (rating: number) => {
     return () => {
+      if (token == null) {
+        alert("You must be logged in to vote!");
+        return;
+      }
       const updatedBody = {
         post_rating: {
           user_token: token,
@@ -69,6 +77,7 @@ const RatingItem: React.FC<Props> = ({ post_id, posts }) => {
   };
 
   useEffect(() => {
+    //possibility of null token
     const updatedBody = {
       post_rating: {
         user_token: token,

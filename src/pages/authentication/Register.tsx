@@ -26,6 +26,7 @@ const Register: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
         navigate("/posts");
       })
       .catch((err) => {
+        alert("Username was used");
         console.error("Signup failed:", err);
       });
   };
