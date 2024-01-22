@@ -9,6 +9,7 @@ import { LogoutProps } from "./components/Interfaces";
 import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
 import { SelectChangeEvent } from "@mui/material";
+import Home from "./pages/Home";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState("token" in localStorage);
@@ -52,11 +53,12 @@ function App() {
         <Route
           path="/"
           element={
-            <Posts
-              searchValue={searchValue}
-              sortOption={sortOption}
-              sortOptions={sortOptions}
-            />
+            // <Posts
+            //   searchValue={searchValue}
+            //   sortOption={sortOption}
+            //   sortOptions={sortOptions}
+            // />
+            <Home />
           }
         />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
