@@ -101,7 +101,7 @@ const Posts: React.FC<PostProps> = ({
             </Typography>
           </CardContent>
         </CardActionArea>
-        <RatingItem post_id={res.post.id} />
+        <RatingItem post_id={res.post.id} posts={filteredPostsArr} />
       </Card>
     </Grid>
   ));

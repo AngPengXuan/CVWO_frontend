@@ -237,7 +237,7 @@ const Post = () => {
             Save Changes
           </Button>
         )}
-        <RatingItem post_id={res?.post.id} />
+        <RatingItem post_id={res?.post.id} posts={null} />
       </Card>
       <div>
         {comments?.map((comment, index) => (
