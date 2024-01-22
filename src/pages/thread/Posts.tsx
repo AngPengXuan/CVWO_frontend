@@ -75,8 +75,8 @@ const Posts: React.FC<PostProps> = ({
     );
     const nonMatchingPosts = postsArr.filter(
       (postInfo) =>
-        !postInfo.post.content.toLowerCase().includes(lowercaseSearch) ||
-        !postInfo.post.title.toLowerCase().includes(lowercaseSearch) ||
+        !postInfo.post.content.toLowerCase().includes(lowercaseSearch) &&
+        !postInfo.post.title.toLowerCase().includes(lowercaseSearch) &&
         !postInfo.post.category.toLowerCase().includes(lowercaseSearch)
     );
 
