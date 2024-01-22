@@ -19,6 +19,7 @@ import {
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 import CommentItem from "../../components/CommentItem";
 import { backendLinks } from "../../utils/BackendConfig";
+import RatingItem from "../../components/Rating";
 
 const Post = () => {
   const params = useParams();
@@ -60,12 +61,14 @@ const Post = () => {
     const url = backendLinks.show_thread + params.id;
     sendRequest(url, "POST", body)
       .then((res) => {
-        console.log("hi");
         setRes(res);
         console.log(res);
       })
       .catch(() => navigate("/posts"));
   };
+  useEffect(() => {
+    getRes();
+  }, []);
 
   useEffect(() => {
     getRes();
@@ -77,7 +80,6 @@ const Post = () => {
       setEditedContent(res.post.content);
       setEditedCategory(res.post.category);
       setComments(res.comments);
-      console.dir(comments);
     }
   }, [res]);
 
@@ -235,6 +237,7 @@ const Post = () => {
             Save Changes
           </Button>
         )}
+        <RatingItem post_id={res?.post.id} />
       </Card>
       <div>
         {comments?.map((comment, index) => (

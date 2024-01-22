@@ -4,6 +4,7 @@ export interface PostInterface {
   category: string;
   id: number;
   username?: string;
+  user_id: number;
   created_at: Date;
   like_count: number;
   dislike_count: number;
@@ -36,6 +37,11 @@ export interface RequestData {
     content: string;
   };
   user?: { username: string; password: string };
+  post_rating?: {
+    user_token?: string | null;
+    post_id?: number;
+    rating?: number;
+  };
 }
 
 type OnLogoutFunction = () => void;

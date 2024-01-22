@@ -41,7 +41,11 @@ const NewPost: React.FC = () => {
     console.log(JSON.stringify(body));
 
     sendRequest(backendLinks.create_thread, "POST", body)
-      .then((response) => navigate(`/post/${response.id}`))
+      .then((response) => {
+        console.log("hi");
+        console.dir(response);
+        navigate(`/post/${response.post.id}`);
+      })
       .catch((error) => console.log(error.message));
   };
   return (

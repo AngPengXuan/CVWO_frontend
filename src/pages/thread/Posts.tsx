@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";
+import RatingItem from "../../components/Rating";
 
 interface PostProps {
   searchValue: string;
@@ -71,6 +72,10 @@ const Posts: React.FC<PostProps> = ({
         return dateB.getTime() - dateA.getTime();
       } else if (sortOption == sortOptions[1]) {
         return dateA.getTime() - dateB.getTime();
+      } else if (sortOption == sortOptions[2]) {
+        return postInfoA.post.like_count - postInfoB.post.like_count;
+      } else if (sortOption == sortOptions[3]) {
+        return postInfoB.post.like_count - postInfoA.post.like_count;
       }
       return 0;
     });
@@ -96,6 +101,7 @@ const Posts: React.FC<PostProps> = ({
             </Typography>
           </CardContent>
         </CardActionArea>
+        <RatingItem post_id={res.post.id} />
       </Card>
     </Grid>
   ));

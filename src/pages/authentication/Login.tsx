@@ -20,6 +20,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const handleLogin = () => {
     sendRequest(backendLinks.login, "POST", body)
       .then((res) => {
+        console.dir(res);
         const token = res.token;
         console.log("Login successful. Token:", token);
         localStorage.setItem("token", token);

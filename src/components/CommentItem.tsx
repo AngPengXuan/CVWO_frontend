@@ -147,7 +147,7 @@ const CommentItem: React.FC<Props> = ({ comment, getRes }) => {
           {editableComment && (
             <Button onClick={saveChangesComment}>Save</Button>
           )}
-          <RatingItem />
+          {/* <RatingItem /> */}
         </CardContent>
       </Card>
     </Grid>
