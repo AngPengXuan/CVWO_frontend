@@ -73,9 +73,9 @@ const Posts: React.FC<PostProps> = ({
       } else if (sortOption == sortOptions[1]) {
         return dateA.getTime() - dateB.getTime();
       } else if (sortOption == sortOptions[2]) {
-        return postInfoA.post.like_count - postInfoB.post.like_count;
-      } else if (sortOption == sortOptions[3]) {
         return postInfoB.post.like_count - postInfoA.post.like_count;
+      } else if (sortOption == sortOptions[3]) {
+        return postInfoA.post.like_count - postInfoB.post.like_count;
       }
       return 0;
     });
