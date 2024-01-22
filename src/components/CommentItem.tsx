@@ -15,7 +15,6 @@ import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 import { onChange, sendRequest, stripHtmlEntities } from "./Functions";
 import { useNavigate } from "react-router-dom";
 import { backendLinks } from "../utils/BackendConfig";
-import RatingItem from "./Rating";
 
 const useStyles = makeStyles(() => ({
   commentBody: {
