@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CommentInterface } from "./Interfaces";
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 import { onChange, sendRequest, stripHtmlEntities } from "./Functions";
@@ -36,15 +36,17 @@ const useStyles = makeStyles(() => ({
 
 type Props = {
   comment: CommentInterface;
+  searchValue: string;
   getRes: () => void;
 };
 
-const CommentItem: React.FC<Props> = ({ comment, getRes }) => {
+const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
   const [editableComment, setEditableComment] = useState(false);
   const [editedContentComment, setEditedContentComment] = useState("");
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const navigate = useNavigate();
+  const [highlightedContent, setHighlightedContent] = useState<JSX.Element>();
 
   const handleSettingClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -95,6 +97,39 @@ const CommentItem: React.FC<Props> = ({ comment, getRes }) => {
     };
   };
 
+  useEffect(() => {
+    if (!searchValue) {
+      setHighlightedContent(undefined);
+      return;
+    }
+    const lowercaseSearch = searchValue.toLowerCase();
+    const highlightedComments = comment.content.split(
+      new RegExp(`(${lowercaseSearch})`, "i")
+    );
+    const highlightedContent = (
+      <>
+        {highlightedComments.map((part, index) =>
+          part.toLowerCase() === lowercaseSearch ? (
+            <span
+              key={index}
+              style={{ fontWeight: "bold", backgroundColor: "yellow" }}
+            >
+              {part}
+            </span>
+          ) : (
+            part
+          )
+        )}
+      </>
+    );
+    //   return { ...comment, content: highlightedContent };
+    // });
+    // const filteredPosts = comments?.filter((postInfo) =>
+    //   postInfo.content.toLowerCase().includes(searchValue.toLowerCase())
+    // );
+    setHighlightedContent(highlightedContent);
+  }, [searchValue]);
+
   return (
     <Grid item xs={6} sx={{ mb: 1 }}>
       <Card className={classes.commentCard}>
@@ -130,7 +165,7 @@ const CommentItem: React.FC<Props> = ({ comment, getRes }) => {
                 }}
               />
             ) : (
-              <span>{comment.content}</span>
+              <span>{highlightedContent || comment.content}</span>
             )}
           </Typography>
           <Typography

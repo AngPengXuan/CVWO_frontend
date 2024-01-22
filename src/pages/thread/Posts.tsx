@@ -24,6 +24,9 @@ interface RatingInterface {
 }
 
 interface PostInfo {
+  content: (string | JSX.Element)[];
+  title: (string | JSX.Element)[];
+  category: (string | JSX.Element)[];
   post: PostInterface;
   ratings: Array<RatingInterface>;
   username: string;
@@ -57,16 +60,68 @@ const Posts: React.FC<PostProps> = ({
   console.dir(postsArr);
 
   useEffect(() => {
-    const filteredPosts = postsArr.filter(
+    if (!searchValue) {
+      setFilteredPostArr(postsArr);
+      return;
+    }
+
+    const lowercaseSearch = searchValue.toLowerCase();
+
+    const matchingPosts = postsArr.filter(
       (postInfo) =>
-        postInfo.post.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-        postInfo.post.content
-          .toLowerCase()
-          .includes(searchValue.toLowerCase()) ||
-        postInfo.post.category.toLowerCase().includes(searchValue.toLowerCase())
+        postInfo.post.content.toLowerCase().includes(lowercaseSearch) ||
+        postInfo.post.title.toLowerCase().includes(lowercaseSearch) ||
+        postInfo.post.category.toLowerCase().includes(lowercaseSearch)
     );
-    setFilteredPostArr(filteredPosts);
-  }, [searchValue]);
+    const nonMatchingPosts = postsArr.filter(
+      (postInfo) =>
+        !postInfo.post.content.toLowerCase().includes(lowercaseSearch) ||
+        !postInfo.post.title.toLowerCase().includes(lowercaseSearch) ||
+        !postInfo.post.category.toLowerCase().includes(lowercaseSearch)
+    );
+
+    const updatedPosts = [...matchingPosts, ...nonMatchingPosts];
+
+    const highlightArray = (input: string, lowercaseSearch: string) => {
+      return input
+        .split(new RegExp(`(${lowercaseSearch})`, "i"))
+        .map((part, index) =>
+          part.toLowerCase() === lowercaseSearch ? (
+            <span
+              key={index}
+              style={{ fontWeight: "bold", backgroundColor: "yellow" }}
+            >
+              {part}
+            </span>
+          ) : (
+            part
+          )
+        );
+    };
+
+    const highlightedPosts = updatedPosts.map((postInfo) => {
+      const highlightedContent = highlightArray(
+        postInfo.post.content,
+        lowercaseSearch
+      );
+      const highlightedTitle = highlightArray(
+        postInfo.post.title,
+        lowercaseSearch
+      );
+      const highlightedCategory = highlightArray(
+        postInfo.post.category,
+        lowercaseSearch
+      );
+
+      return {
+        ...postInfo,
+        content: highlightedContent,
+        title: highlightedTitle,
+        category: highlightedCategory,
+      };
+    });
+    setFilteredPostArr(highlightedPosts);
+  }, [searchValue, postsArr]);
 
   useEffect(() => {
     const sortedPosts = postsArr.slice().sort((postInfoA, postInfoB) => {
@@ -106,26 +161,27 @@ const Posts: React.FC<PostProps> = ({
     setFilteredPostArr(sortedPosts);
   }, [sortOption]);
 
-  const allPosts = filteredPostsArr.map((res, index) => (
+  const allPosts = filteredPostsArr.map((postInfo, index) => (
     <Grid item xs={12} key={index} sx={{ mb: 3 }}>
       <Card key={index}>
-        <CardActionArea href={`/post/${res.post.id}`}>
+        <CardActionArea href={`/post/${postInfo.post.id}`}>
           <CardContent>
             <Typography variant="h5" component="h5" fontWeight="bold">
-              {res.post.title}
+              {postInfo.title || postInfo.post.title}
             </Typography>
             <Typography color="textSecondary" gutterBottom>
-              posted by {res.username} on {res.post.created_at.toLocaleString()}
+              posted by {postInfo.username} on{" "}
+              {postInfo.post.created_at.toLocaleString()}
             </Typography>
             <Typography color="textSecondary" gutterBottom>
-              category: {res.post.category}
+              category: {postInfo.category || postInfo.post.category}
             </Typography>
             <Typography variant="body2" component="p">
-              {res.post.content}
+              {postInfo.content || postInfo.post.content}
             </Typography>
           </CardContent>
         </CardActionArea>
-        <RatingItem post_id={res.post.id} posts={filteredPostsArr} />
+        <RatingItem post_id={postInfo.post.id} posts={filteredPostsArr} />
       </Card>
     </Grid>
   ));

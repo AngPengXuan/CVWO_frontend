@@ -21,7 +21,17 @@ import CommentItem from "../../components/CommentItem";
 import { backendLinks } from "../../utils/BackendConfig";
 import RatingItem from "../../components/Rating";
 
-const Post = () => {
+interface PostProps {
+  searchValue: string;
+  sortOption: string;
+  sortOptions: Array<string>;
+}
+
+const Post: React.FC<PostProps> = ({
+  searchValue,
+  sortOption,
+  sortOptions,
+}) => {
   const params = useParams();
   const navigate = useNavigate();
   const [res, setRes] = useState<ResponseInterface>();
@@ -32,6 +42,8 @@ const Post = () => {
   const [content, setContent] = useState("");
   const [comments, setComments] = useState<CommentInterface[]>();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  // const [updatedComments, setUpdatedComments] =
+  //   useState<UpdatedCommentInterface[]>();
 
   const handleSettingClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -66,9 +78,6 @@ const Post = () => {
       })
       .catch(() => navigate("/posts"));
   };
-  useEffect(() => {
-    getRes();
-  }, []);
 
   useEffect(() => {
     getRes();
@@ -82,6 +91,89 @@ const Post = () => {
       setComments(res.comments);
     }
   }, [res]);
+
+  useEffect(() => {
+    const sortedPosts = comments?.slice().sort((postInfoA, postInfoB) => {
+      const dateA = new Date(postInfoA.created_at);
+      const dateB = new Date(postInfoB.created_at);
+
+      // Compare the dates
+      if (sortOption == sortOptions[0]) {
+        return dateB.getTime() - dateA.getTime();
+      } else if (sortOption == sortOptions[1]) {
+        return dateA.getTime() - dateB.getTime();
+      }
+      // } else if (sortOption == sortOptions[2]) {
+      //   return (
+      //     postInfoB.ratings.reduce(
+      //       (accumulator, currVal) => accumulator + currVal.rating,
+      //       0
+      //     ) -
+      //     postInfoA.ratings.reduce(
+      //       (accumulator, currVal) => accumulator + currVal.rating,
+      //       0
+      //     )
+      //   );
+      // } else if (sortOption == sortOptions[3]) {
+      //   return (
+      //     postInfoA.ratings.reduce(
+      //       (accumulator, currVal) => accumulator + currVal.rating,
+      //       0
+      //     ) -
+      //     postInfoB.ratings.reduce(
+      //       (accumulator, currVal) => accumulator + currVal.rating,
+      //       0
+      //     )
+      //   );
+      // }
+      return 0;
+    });
+    setComments(sortedPosts);
+  }, [sortOption]);
+
+  useEffect(() => {
+    if (!searchValue) {
+      setComments(comments);
+      return;
+    }
+    if (comments == undefined) {
+      return;
+    }
+    const lowercaseSearch = searchValue.toLowerCase();
+    const matchingComments = comments.filter((comment) =>
+      comment.content.toLowerCase().includes(lowercaseSearch)
+    );
+    const nonMatchingComments = comments.filter(
+      (comment) => !comment.content.toLowerCase().includes(lowercaseSearch)
+    );
+    const updatedComments = [...matchingComments, ...nonMatchingComments];
+    // const highlightedComments = updatedComments.map((comment) => {
+    //   const contentArray = comment.content.split(
+    //     new RegExp(`(${lowercaseSearch})`, "i")
+    //   );
+    //   const highlightedContent = (
+    //     <>
+    //       {contentArray.map((part, index) => (
+    //         part.toLowerCase() === lowercaseSearch ? (
+    //           <span
+    //             key={index}
+    //             style={{ fontWeight: "bold", backgroundColor: "yellow" }}
+    //           >
+    //             {part}
+    //           </span>
+    //         ) : (
+    //           part
+    //         )
+    //       ))}
+    //     </>
+    //   );
+    //   return { ...comment, content: highlightedContent };
+    // });
+    // const filteredPosts = comments?.filter((postInfo) =>
+    //   postInfo.content.toLowerCase().includes(searchValue.toLowerCase())
+    // );
+    setComments(updatedComments);
+  }, [searchValue]);
 
   const addHtmlEntities = (str: string) => {
     return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
@@ -245,6 +337,7 @@ const Post = () => {
             comment={comment}
             getRes={getRes}
             key={index}
+            searchValue={searchValue}
           ></CommentItem>
         ))}
       </div>

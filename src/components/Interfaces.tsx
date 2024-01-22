@@ -13,6 +13,15 @@ export interface PostInterface {
 export interface CommentInterface {
   username: string;
   content: string;
+  modified_content: string;
+  is_owner: boolean;
+  id: number;
+  created_at: Date;
+}
+
+export interface UpdatedCommentInterface {
+  username: string;
+  content: string | JSX.Element;
   is_owner: boolean;
   id: number;
   created_at: Date;

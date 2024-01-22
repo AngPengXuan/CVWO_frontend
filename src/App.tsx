@@ -74,7 +74,16 @@ function App() {
             />
           }
         />
-        <Route path="/post/:id" element={<Post />} />
+        <Route
+          path="/post/:id"
+          element={
+            <Post
+              searchValue={searchValue}
+              sortOption={sortOption}
+              sortOptions={sortOptions}
+            />
+          }
+        />
         <Route
           path="/new_post"
           element={
