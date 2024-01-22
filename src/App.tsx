@@ -46,6 +46,7 @@ function App() {
         sortOption={sortOption}
         handleSort={handleSort}
         sortOptions={sortOptions}
+        currentRoute={window.location.pathname}
       />
       <Routes>
         <Route

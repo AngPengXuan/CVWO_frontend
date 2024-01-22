@@ -30,6 +30,7 @@ interface AppbarProps {
   searchValue: string;
   sortOption: string;
   sortOptions: Array<string>;
+  currentRoute: string;
 }
 
 const drawerWidth = 240;
@@ -42,8 +43,14 @@ const Navbar: React.FC<AppbarProps> = ({
   sortOption,
   searchValue,
   sortOptions,
+  currentRoute,
 }: AppbarProps) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  //Yet to implement rating for comments
+  if (currentRoute.includes("/post/")) {
+    sortOptions.splice(2);
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -109,9 +116,6 @@ const Navbar: React.FC<AppbarProps> = ({
             onChange={handleSort}
             style={{ color: "white" }}
           >
-            {/* <MenuItem value={"da"}>{"date \u2191"}</MenuItem>
-            <MenuItem value={"dd"}>date descending</MenuItem>
-            <MenuItem value={"ra"}>rating ascending</MenuItem> */}
             {sortOptions.map((option) => (
               <MenuItem key={option} value={option}>
                 {option}
