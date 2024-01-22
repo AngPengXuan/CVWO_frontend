@@ -151,31 +151,6 @@ const Post: React.FC<PostProps> = ({
       (comment) => !comment.content.toLowerCase().includes(lowercaseSearch)
     );
     const updatedComments = [...matchingComments, ...nonMatchingComments];
-    // const highlightedComments = updatedComments.map((comment) => {
-    //   const contentArray = comment.content.split(
-    //     new RegExp(`(${lowercaseSearch})`, "i")
-    //   );
-    //   const highlightedContent = (
-    //     <>
-    //       {contentArray.map((part, index) => (
-    //         part.toLowerCase() === lowercaseSearch ? (
-    //           <span
-    //             key={index}
-    //             style={{ fontWeight: "bold", backgroundColor: "yellow" }}
-    //           >
-    //             {part}
-    //           </span>
-    //         ) : (
-    //           part
-    //         )
-    //       ))}
-    //     </>
-    //   );
-    //   return { ...comment, content: highlightedContent };
-    // });
-    // const filteredPosts = comments?.filter((postInfo) =>
-    //   postInfo.content.toLowerCase().includes(searchValue.toLowerCase())
-    // );
     setComments(updatedComments);
   }, [searchValue]);
 
@@ -271,16 +246,19 @@ const Post: React.FC<PostProps> = ({
               <>
                 {"Title:"}
                 <br />
-                <textarea
+                <TextField
+                  id="postTitle"
                   name="title"
+                  minRows={3}
+                  required
                   value={editedTitle}
-                  onChange={(e) => {
-                    onChange(e, setEditedTitle);
-                  }}
-                />{" "}
+                  onChange={(event) => onChange(event, setEditedTitle)}
+                  style={{ width: "100%", resize: "vertical" }}
+                  sx={{ pb: 2 }}
+                />
               </>
             ) : (
-              <span>{res && res.post.title}</span>
+              <span>Title: {res && res.post.title}</span>
             )}
           </Typography>
           <Typography variant="body1" component="p">
@@ -288,16 +266,19 @@ const Post: React.FC<PostProps> = ({
               <>
                 {"Category:"}
                 <br />
-                <textarea
+                <TextField
+                  id="postCategory"
                   name="category"
+                  minRows={3}
+                  required
                   value={editedCategory}
-                  onChange={(e) => {
-                    onChange(e, setEditedCategory);
-                  }}
+                  onChange={(event) => onChange(event, setEditedCategory)}
+                  style={{ width: "100%", resize: "vertical" }}
+                  sx={{ pb: 2 }}
                 />
               </>
             ) : (
-              <span>{res && res.post.category}</span>
+              <span>category: {res && res.post.category}</span>
             )}
           </Typography>
           <Typography variant="body2" component="p">
@@ -305,12 +286,15 @@ const Post: React.FC<PostProps> = ({
               <>
                 {"Content:"}
                 <br />
-                <textarea
+                <TextField
+                  id="postContent"
                   name="content"
+                  minRows={3}
+                  required
                   value={editedContent}
-                  onChange={(e) => {
-                    onChange(e, setEditedContent);
-                  }}
+                  onChange={(event) => onChange(event, setEditedContent)}
+                  style={{ width: "100%", resize: "vertical" }}
+                  sx={{ pb: 2 }}
                 />
               </>
             ) : (

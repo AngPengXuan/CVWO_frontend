@@ -6,6 +6,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  TextField,
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -157,12 +158,22 @@ const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
         <CardContent>
           <Typography variant="body2" component="p">
             {editableComment ? (
-              <textarea
+              // <textarea
+              //   name="content"
+              //   value={editedContentComment}
+              //   onChange={(e) => {
+              //     onChange(e, setEditedContentComment);
+              //   }}
+              // />
+              <TextField
+                id="commentContent"
                 name="content"
+                minRows={3}
+                required
                 value={editedContentComment}
-                onChange={(e) => {
-                  onChange(e, setEditedContentComment);
-                }}
+                onChange={(event) => onChange(event, setEditedContentComment)}
+                style={{ width: "100%", resize: "vertical" }}
+                sx={{ pb: 2 }}
               />
             ) : (
               <span>{highlightedContent || comment.content}</span>
