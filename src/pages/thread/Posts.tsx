@@ -51,6 +51,9 @@ const Posts: React.FC<PostProps> = ({
         throw new Error("Network response was not ok.");
       })
       .then((res) => {
+        res.map((postInfo: PostInfo) => {
+          postInfo.post.created_at = new Date(postInfo.post.created_at);
+        });
         setPost(res);
         setFilteredPostArr(res);
       })
@@ -171,7 +174,15 @@ const Posts: React.FC<PostProps> = ({
             </Typography>
             <Typography color="textSecondary" gutterBottom>
               posted by {postInfo.username} on{" "}
-              {postInfo.post.created_at.toLocaleString()}
+              {postInfo.post.created_at.toLocaleString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                timeZone: "UTC",
+              })}
             </Typography>
             <Typography color="textSecondary" gutterBottom>
               category: {postInfo.category || postInfo.post.category}

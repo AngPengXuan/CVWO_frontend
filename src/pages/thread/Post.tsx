@@ -73,6 +73,10 @@ const Post: React.FC<PostProps> = ({
     const url = backendLinks.show_thread + params.id;
     sendRequest(url, "POST", body)
       .then((res) => {
+        res.post.created_at = new Date(res.post.created_at);
+        res.comments.map((postInfo: CommentInterface) => {
+          postInfo.created_at = new Date(postInfo.created_at);
+        });
         setRes(res);
         console.log(res);
       })
