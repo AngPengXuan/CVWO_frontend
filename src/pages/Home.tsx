@@ -44,7 +44,11 @@ const Home = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               onClick={() => {
-                navigate("/register");
+                if (localStorage.getItem("token") == null) {
+                  navigate("/register");
+                } else {
+                  navigate("/threads");
+                }
               }}
             >
               {"Register"}
