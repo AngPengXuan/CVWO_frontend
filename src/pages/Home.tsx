@@ -77,7 +77,7 @@ const Home = () => {
                 navigate("/threads");
               }}
             >
-              {"View threads as guest"}
+              {"View threads"}
             </Button>
           </Box>
         </Box>
