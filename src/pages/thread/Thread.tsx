@@ -42,8 +42,6 @@ const Post: React.FC<PostProps> = ({
   const [content, setContent] = useState("");
   const [comments, setComments] = useState<CommentInterface[]>();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  // const [updatedComments, setUpdatedComments] =
-  //   useState<UpdatedCommentInterface[]>();
 
   const handleSettingClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -97,9 +95,9 @@ const Post: React.FC<PostProps> = ({
   }, [res]);
 
   useEffect(() => {
-    const sortedPosts = comments?.slice().sort((postInfoA, postInfoB) => {
-      const dateA = new Date(postInfoA.created_at);
-      const dateB = new Date(postInfoB.created_at);
+    const sortedPosts = comments?.slice().sort((commentInfoA, commentInfoB) => {
+      const dateA = new Date(commentInfoA.created_at);
+      const dateB = new Date(commentInfoB.created_at);
 
       // Compare the dates
       if (sortOption == sortOptions[0]) {
@@ -107,29 +105,6 @@ const Post: React.FC<PostProps> = ({
       } else if (sortOption == sortOptions[1]) {
         return dateA.getTime() - dateB.getTime();
       }
-      // } else if (sortOption == sortOptions[2]) {
-      //   return (
-      //     postInfoB.ratings.reduce(
-      //       (accumulator, currVal) => accumulator + currVal.rating,
-      //       0
-      //     ) -
-      //     postInfoA.ratings.reduce(
-      //       (accumulator, currVal) => accumulator + currVal.rating,
-      //       0
-      //     )
-      //   );
-      // } else if (sortOption == sortOptions[3]) {
-      //   return (
-      //     postInfoA.ratings.reduce(
-      //       (accumulator, currVal) => accumulator + currVal.rating,
-      //       0
-      //     ) -
-      //     postInfoB.ratings.reduce(
-      //       (accumulator, currVal) => accumulator + currVal.rating,
-      //       0
-      //     )
-      //   );
-      // }
       return 0;
     });
     setComments(sortedPosts);

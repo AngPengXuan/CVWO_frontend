@@ -40,7 +40,7 @@ const NewPost: React.FC = () => {
     };
     console.log(JSON.stringify(body));
 
-    sendRequest(backendLinks.create_thread, "POST", body)
+    sendRequest(backendLinks.create_post, "POST", body)
       .then((response) => {
         console.log("hi");
         console.dir(response);

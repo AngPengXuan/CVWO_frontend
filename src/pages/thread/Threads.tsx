@@ -42,7 +42,7 @@ const Posts: React.FC<PostProps> = ({
   const [filteredPostsArr, setFilteredPostArr] = useState<PostInfo[]>([]);
 
   useEffect(() => {
-    fetch(backendLinks.show_all_thread)
+    fetch(backendLinks.show_all_post)
       .then((res) => {
         if (res.ok) {
           console.dir(res);
@@ -200,7 +200,7 @@ const Posts: React.FC<PostProps> = ({
   const noPost = (
     <div>
       <h3>
-        No posts yet. Why not <Link to="/new_post">create one</Link>
+        No threads yet. Why not <Link to="/new_thread">create one</Link>
       </h3>
     </div>
   );

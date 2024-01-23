@@ -60,7 +60,7 @@ const Home = () => {
                 if (localStorage.getItem("token") == null) {
                   navigate("/login");
                 } else {
-                  navigate("/posts");
+                  navigate("/threads");
                 }
               }}
             >
@@ -74,7 +74,7 @@ const Home = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               onClick={() => {
-                navigate("/posts");
+                navigate("/threads");
               }}
             >
               {"View threads as guest"}

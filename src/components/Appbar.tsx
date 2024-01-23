@@ -48,17 +48,17 @@ const Navbar: React.FC<AppbarProps> = ({
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   //Yet to implement rating for comments
-  if (currentRoute.includes("/post/")) {
+  if (currentRoute.includes("/thread/")) {
     sortOptions.splice(2);
   }
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-  const commonLinks = [["Threads", "/posts"]];
+  const commonLinks = [["Threads", "/threads"]];
 
   const navLinks = login
-    ? [...commonLinks, ["Create", "/new_post"], ["Logout", "/logout"]]
+    ? [...commonLinks, ["Create", "/new_thread"], ["Logout", "/logout"]]
     : [...commonLinks, ["Register", "/register"], ["Log in", "/login"]];
 
   const forumName = "Forum";

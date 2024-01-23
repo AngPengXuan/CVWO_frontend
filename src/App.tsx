@@ -1,10 +1,10 @@
 import { Routes, Route, BrowserRouter, useNavigate } from "react-router-dom";
 import Navbar from "./components/Appbar";
 import Protected from "./pages/authentication/Protected";
-import Posts from "./pages/thread/Posts";
-import NewPost from "./pages/thread/NewPost";
+import Posts from "./pages/thread/Threads";
+import NewPost from "./pages/thread/NewThread";
 import { useEffect, useState } from "react";
-import Post from "./pages/thread/Post";
+import Post from "./pages/thread/Thread";
 import { LogoutProps } from "./components/Interfaces";
 import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
@@ -58,7 +58,7 @@ function App() {
         />
         <Route path="/register" element={<Register onLogin={handleLogin} />} />
         <Route
-          path="/posts"
+          path="/threads"
           element={
             <Posts
               searchValue={searchValue}
@@ -68,7 +68,7 @@ function App() {
           }
         />
         <Route
-          path="/post/:id"
+          path="/thread/:id"
           element={
             <Post
               searchValue={searchValue}
@@ -78,7 +78,7 @@ function App() {
           }
         />
         <Route
-          path="/new_post"
+          path="/new_thread"
           element={
             <Protected>
               <NewPost />
@@ -96,7 +96,7 @@ const LogoutFunction: React.FC<LogoutProps> = ({ onLogout }: LogoutProps) => {
     localStorage.removeItem("token");
     onLogout();
 
-    navigate("/posts");
+    navigate("/threads");
   }, [onLogout, navigate]);
   return null;
 };
