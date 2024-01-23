@@ -167,7 +167,7 @@ const Posts: React.FC<PostProps> = ({
   const allPosts = filteredPostsArr.map((postInfo, index) => (
     <Grid item xs={12} key={index} sx={{ mb: 3 }}>
       <Card key={index}>
-        <CardActionArea href={`/post/${postInfo.post.id}`}>
+        <CardActionArea href={`/thread/${postInfo.post.id}`}>
           <CardContent>
             <Typography variant="h5" component="h5" fontWeight="bold">
               {postInfo.title || postInfo.post.title}
