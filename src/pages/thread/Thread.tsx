@@ -68,7 +68,7 @@ const Post: React.FC<PostProps> = ({
   };
 
   const getRes = () => {
-    const url = backendLinks.show_thread + params.id;
+    const url = backendLinks.show_post + params.id;
     sendRequest(url, "POST", body)
       .then((res) => {
         res.post.created_at = new Date(res.post.created_at);
@@ -134,14 +134,14 @@ const Post: React.FC<PostProps> = ({
   };
 
   const deletePost = () => {
-    const url = backendLinks.destroy_thread + params.id;
+    const url = backendLinks.destroy_post + params.id;
     sendRequest(url, "DELETE", body)
       .then(() => navigate("/posts"))
       .catch((error) => console.log(error.message));
   };
 
   const saveChanges = () => {
-    const url = backendLinks.update_thread + params.id;
+    const url = backendLinks.update_post + params.id;
     const updatedBody = {
       token: localStorage.getItem("token"),
       post: {
