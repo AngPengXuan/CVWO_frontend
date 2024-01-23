@@ -47,11 +47,17 @@ const Navbar: React.FC<AppbarProps> = ({
   currentRoute,
 }: AppbarProps) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [searchAndSort, setsearchAndSort] = React.useState(true);
 
   //Yet to implement rating for comments
   if (currentRoute.includes("/thread/")) {
     sortOptions.splice(2);
   }
+  React.useEffect(() => {
+    if (currentRoute.includes("/new_thread")) {
+      setsearchAndSort(false);
+    }
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -70,36 +76,40 @@ const Navbar: React.FC<AppbarProps> = ({
         {forumName}
       </Typography>
       <Divider />
-      <Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <StyledInputBase
-          placeholder="Search…"
-          inputProps={{ "aria-label": "search" }}
-          onChange={handleSearch}
-          value={searchValue}
-        />
-      </Search>
-      <Divider />
-      <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>
-        Sort by:
-      </InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={sortOption}
-        label="Sort"
-        onChange={handleSort}
-        style={{ color: "black" }}
-      >
-        {sortOptions.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </Select>
-      <Divider />
+      {searchAndSort && (
+        <>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+              onChange={handleSearch}
+              value={searchValue}
+            />
+          </Search>
+          <Divider />
+          <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>
+            Sort by:
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={sortOption}
+            label="Sort"
+            onChange={handleSort}
+            style={{ color: "black" }}
+          >
+            {sortOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+          <Divider />{" "}
+        </>
+      )}
       <List>
         {navLinks.map(([item, link]) => (
           <>
@@ -139,43 +149,53 @@ const Navbar: React.FC<AppbarProps> = ({
           >
             {forumName}
           </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" }, marginRight: 2 }}>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-                onChange={handleSearch}
-                value={searchValue}
-              />
-            </Search>
-          </Box>
-          <Box sx={{ display: { xs: "none", sm: "block" }, marginRight: 2 }}>
-            <InputLabel
-              id="demo-simple-select-label"
-              style={{ color: "white" }}
-            >
-              Sort by:
-            </InputLabel>
-          </Box>
-          <Box sx={{ display: { xs: "none", sm: "block" }, marginRight: 2 }}>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={sortOption}
-              label="Sort"
-              onChange={handleSort}
-              style={{ color: "white" }}
-            >
-              {sortOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
+          {searchAndSort && (
+            <>
+              <Box
+                sx={{ display: { xs: "none", sm: "block" }, marginRight: 2 }}
+              >
+                <Search>
+                  <SearchIconWrapper>
+                    <SearchIcon />
+                  </SearchIconWrapper>
+                  <StyledInputBase
+                    placeholder="Search…"
+                    inputProps={{ "aria-label": "search" }}
+                    onChange={handleSearch}
+                    value={searchValue}
+                  />
+                </Search>
+              </Box>
+              <Box
+                sx={{ display: { xs: "none", sm: "block" }, marginRight: 2 }}
+              >
+                <InputLabel
+                  id="demo-simple-select-label"
+                  style={{ color: "white" }}
+                >
+                  Sort by:
+                </InputLabel>
+              </Box>
+              <Box
+                sx={{ display: { xs: "none", sm: "block" }, marginRight: 2 }}
+              >
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={sortOption}
+                  label="Sort"
+                  onChange={handleSort}
+                  style={{ color: "white" }}
+                >
+                  {sortOptions.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+            </>
+          )}
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navLinks.map(([item, link]) => (
               <Button key={item} sx={{ color: "#fff" }} href={link}>
