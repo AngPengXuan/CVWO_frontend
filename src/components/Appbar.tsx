@@ -55,7 +55,7 @@ const Navbar: React.FC<AppbarProps> = ({
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-  const commonLinks = [["Posts", "/posts"]];
+  const commonLinks = [["Threads", "/posts"]];
 
   const navLinks = login
     ? [...commonLinks, ["Create", "/new_post"], ["Logout", "/logout"]]

@@ -50,17 +50,7 @@ function App() {
         currentRoute={window.location.pathname}
       />
       <Routes>
-        <Route
-          path="/"
-          element={
-            // <Posts
-            //   searchValue={searchValue}
-            //   sortOption={sortOption}
-            //   sortOptions={sortOptions}
-            // />
-            <Home />
-          }
-        />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route
           path="/logout"

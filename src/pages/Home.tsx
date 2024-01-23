@@ -66,6 +66,19 @@ const Home = () => {
             >
               {"Login"}
             </Button>
+            <Typography variant="h5" sx={{ textAlign: "center" }}>
+              or
+            </Typography>
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => {
+                navigate("/posts");
+              }}
+            >
+              {"View threads as guest"}
+            </Button>
           </Box>
         </Box>
       </Container>
