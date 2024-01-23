@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import { Search, SearchIconWrapper, StyledInputBase } from "./SearchBar";
 import SearchIcon from "@mui/icons-material/Search";
+import FilterDramaIcon from "@mui/icons-material/FilterDrama";
 
 interface AppbarProps {
   login: Boolean;
@@ -61,21 +62,54 @@ const Navbar: React.FC<AppbarProps> = ({
     ? [...commonLinks, ["Create", "/new_thread"], ["Logout", "/logout"]]
     : [...commonLinks, ["Register", "/register"], ["Log in", "/login"]];
 
-  const forumName = "Forum";
+  const forumName = <FilterDramaIcon />;
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+    <Box sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
         {forumName}
       </Typography>
       <Divider />
+      <Search>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          placeholder="Search…"
+          inputProps={{ "aria-label": "search" }}
+          onChange={handleSearch}
+          value={searchValue}
+        />
+      </Search>
+      <Divider />
+      <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>
+        Sort by:
+      </InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={sortOption}
+        label="Sort"
+        onChange={handleSort}
+        style={{ color: "black" }}
+      >
+        {sortOptions.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </Select>
+      <Divider />
       <List>
         {navLinks.map(([item, link]) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }} href={link}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
+          <>
+            <ListItem key={item} disablePadding>
+              <ListItemButton sx={{ textAlign: "center" }} href={link}>
+                <ListItemText primary={item} />
+              </ListItemButton>
+            </ListItem>
+            <Divider />
+          </>
         ))}
       </List>
     </Box>
@@ -105,34 +139,43 @@ const Navbar: React.FC<AppbarProps> = ({
           >
             {forumName}
           </Typography>
-          <InputLabel id="demo-simple-select-label" style={{ color: "white" }}>
-            Sort by:
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={sortOption}
-            label="Sort"
-            onChange={handleSort}
-            style={{ color: "white" }}
-          >
-            {sortOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              onChange={handleSearch}
-              value={searchValue}
-            />
-          </Search>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                onChange={handleSearch}
+                value={searchValue}
+              />
+            </Search>
+          </Box>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <InputLabel
+              id="demo-simple-select-label"
+              style={{ color: "white" }}
+            >
+              Sort by:
+            </InputLabel>
+          </Box>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={sortOption}
+              label="Sort"
+              onChange={handleSort}
+              style={{ color: "white" }}
+            >
+              {sortOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navLinks.map(([item, link]) => (
               <Button key={item} sx={{ color: "#fff" }} href={link}>
@@ -142,26 +185,24 @@ const Navbar: React.FC<AppbarProps> = ({
           </Box>
         </Toolbar>
       </AppBar>
-      <nav>
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </nav>
+      <Drawer
+        container={container}
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: drawerWidth,
+          },
+        }}
+      >
+        {drawer}
+      </Drawer>
     </Box>
   );
 };
