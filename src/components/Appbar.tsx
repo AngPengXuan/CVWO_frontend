@@ -139,7 +139,7 @@ const Navbar: React.FC<AppbarProps> = ({
           >
             {forumName}
           </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box sx={{ display: { xs: "none", sm: "block" }, marginRight: 2 }}>
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -152,7 +152,7 @@ const Navbar: React.FC<AppbarProps> = ({
               />
             </Search>
           </Box>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box sx={{ display: { xs: "none", sm: "block" }, marginRight: 2 }}>
             <InputLabel
               id="demo-simple-select-label"
               style={{ color: "white" }}
@@ -160,7 +160,7 @@ const Navbar: React.FC<AppbarProps> = ({
               Sort by:
             </InputLabel>
           </Box>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box sx={{ display: { xs: "none", sm: "block" }, marginRight: 2 }}>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
