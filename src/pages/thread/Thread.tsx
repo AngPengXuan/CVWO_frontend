@@ -78,7 +78,7 @@ const Post: React.FC<PostProps> = ({
         setRes(res);
         console.log(res);
       })
-      .catch(() => navigate("/posts"));
+      .catch(() => navigate("/threads"));
   };
 
   useEffect(() => {
@@ -136,7 +136,7 @@ const Post: React.FC<PostProps> = ({
   const deletePost = () => {
     const url = backendLinks.destroy_post + params.id;
     sendRequest(url, "DELETE", body)
-      .then(() => navigate("/posts"))
+      .then(() => navigate("/threads"))
       .catch((error) => console.log(error.message));
   };
 
@@ -154,7 +154,7 @@ const Post: React.FC<PostProps> = ({
       .then((response) => {
         setEditable(false);
         getRes();
-        navigate(`/post/${response.id}`);
+        navigate(`/thread/${response.id}`);
       })
       .catch((error) => console.log(error.message));
   };
