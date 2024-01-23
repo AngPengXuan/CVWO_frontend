@@ -23,7 +23,7 @@ const Register: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
         console.log("Register successful. Token:", token);
         localStorage.setItem("token", token);
         onLogin();
-        navigate("/posts");
+        navigate("/threads");
       })
       .catch((err) => {
         alert("Username was used");

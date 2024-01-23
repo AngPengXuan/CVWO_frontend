@@ -25,7 +25,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
         console.log("Login successful. Token:", token);
         localStorage.setItem("token", token);
         onLogin();
-        navigate("/posts");
+        navigate("/threads");
       })
       .catch((err) => {
         console.error("Login failed:", err);
