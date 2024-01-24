@@ -1,4 +1,4 @@
-# CVWO assignment backend (Work in Progress)
+# CVWO assignment frontend
 
 A minimal implementation of the assignment, a forum that users can register and login, and perform basic CRUD operations for forum threads and comments.
 
@@ -9,19 +9,25 @@ The frontend has been deployed using Netlify [here](https://melodious-choux-dce2
 ### Running the app
 1. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository) this repo.
 2. [Clone](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository) **your** forked repo.
-3. Open your terminal and navigate to the directory containing your cloned project.
-4. Install dependencies for the project by entering this command:
+3. Update the file in src/utils/DeploymentConfig.ts to use local backend instead of deployed backend:
+```
+export const backendLink = "http://localhost:3000/";
+//export const backendLink = "https://cvwo-backend-2voo.onrender.com/"
+```
+
+4. Open your terminal and navigate to the directory containing your cloned project.
+5. Install dependencies for the project by entering this command:
 
 ```bash
 yarn install
 ```
-5. Run the app in development mode by entering this command:
+6. Run the app in development mode by entering this command:
 
 ```bash
-yarn run dev
+yarn dev
 ```
 
-6. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+7. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
 
 ## Additional Notes
 -   This project uses [Typescript](https://www.typescriptlang.org/).
