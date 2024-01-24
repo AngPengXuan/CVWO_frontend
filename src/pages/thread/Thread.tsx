@@ -77,7 +77,6 @@ const Post: React.FC<PostProps> = ({
           postInfo.created_at = new Date(postInfo.created_at);
         });
         setRes(res);
-        console.log(res);
       })
       .catch(() => navigate("/threads"));
   };
@@ -104,7 +103,6 @@ const Post: React.FC<PostProps> = ({
         (commentInfoA: CommentInterface, commentInfoB: CommentInterface) => {
           const dateA = new Date(commentInfoA.created_at);
           const dateB = new Date(commentInfoB.created_at);
-          console.dir(comments);
 
           // Compare the dates
           if (sortOption == sortOptions[0]) {
@@ -218,8 +216,6 @@ const Post: React.FC<PostProps> = ({
       .then(() => {
         setContent("");
         getRes();
-        console.log("navigating");
-        // navigate(`/post/${response.id}`);
       })
       .catch((error) => console.log(error));
   };

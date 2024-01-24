@@ -46,7 +46,6 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const handleSearch = (event: SyntheticEvent) => {
-  console.log(event);
   if (event.nativeEvent instanceof InputEvent) {
     console.log(event.nativeEvent.data);
   }

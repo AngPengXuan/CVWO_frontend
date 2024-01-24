@@ -83,7 +83,6 @@ const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
 
   const deleteComment = (index: number) => {
     return () => {
-      console.log("delete");
       handleSettingClose();
       const commentBody = {
         token: localStorage.getItem("token"),
@@ -124,11 +123,6 @@ const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
         )}
       </>
     );
-    //   return { ...comment, content: highlightedContent };
-    // });
-    // const filteredPosts = comments?.filter((postInfo) =>
-    //   postInfo.content.toLowerCase().includes(searchValue.toLowerCase())
-    // );
     setHighlightedContent(highlightedContent);
   }, [searchValue]);
 

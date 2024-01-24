@@ -45,7 +45,6 @@ const Posts: React.FC<PostProps> = ({
     fetch(backendLinks.show_all_post)
       .then((res) => {
         if (res.ok) {
-          console.dir(res);
           return res.json();
         }
         throw new Error("Network response was not ok.");
@@ -62,8 +61,6 @@ const Posts: React.FC<PostProps> = ({
   useEffect(() => {
     getRes();
   }, []);
-
-  console.dir(postsArr);
 
   useEffect(() => {
     if (!searchValue) {
