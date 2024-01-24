@@ -6,16 +6,9 @@ import { backendLinks } from "../utils/BackendConfig";
 import { Button } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
-import { CommentInterface, PostInterface } from "./Interfaces";
-
-interface PostInfo {
-  post: PostInterface;
-  username: string;
-}
+import { CommentInterface } from "./Interfaces";
 
 type Props = {
-  //   comment_id: number | undefined;
-  //   comments: Array<PostInfo> | null;
   comment: CommentInterface;
   getRes: () => void;
 };
