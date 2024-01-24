@@ -1,23 +1,14 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendRequest } from "../../components/Functions";
+import { sendRequest, stripHtmlEntities } from "../../components/Functions";
 import { backendLinks } from "../../utils/BackendConfig";
 import { Box, Button, TextField, Typography, Link, Grid } from "@mui/material";
 
 const NewPost: React.FC = () => {
   const navigate = useNavigate();
-  //   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
-
-  //convert special characters to their escaped/encoded values respectively
-  const stripHtmlEntities = (str: String) => {
-    return String(str)
-      .replace(/\n/g, "<br> <br>")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  };
 
   const onChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
