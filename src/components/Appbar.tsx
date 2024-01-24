@@ -49,10 +49,10 @@ const Navbar: React.FC<AppbarProps> = ({
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [searchAndSort, setsearchAndSort] = React.useState(true);
 
-  //Yet to implement rating for comments
-  if (currentRoute.includes("/thread/")) {
-    sortOptions.splice(2);
-  }
+  // //Yet to implement rating for comments
+  // if (currentRoute.includes("/thread/")) {
+  //   sortOptions.splice(2);
+  // }
   React.useEffect(() => {
     if (currentRoute.includes("/new_thread")) {
       setsearchAndSort(false);

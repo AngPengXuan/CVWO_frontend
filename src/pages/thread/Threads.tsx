@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";
-import RatingItem from "../../components/Rating";
+import RatingItem from "../../components/ThreadRating";
 
 interface PostProps {
   searchValue: string;
@@ -41,7 +41,7 @@ const Posts: React.FC<PostProps> = ({
   const [postsArr, setPost] = useState<PostInfo[]>([]);
   const [filteredPostsArr, setFilteredPostArr] = useState<PostInfo[]>([]);
 
-  useEffect(() => {
+  const getRes = () => {
     fetch(backendLinks.show_all_post)
       .then((res) => {
         if (res.ok) {
@@ -55,16 +55,19 @@ const Posts: React.FC<PostProps> = ({
           postInfo.post.created_at = new Date(postInfo.post.created_at);
         });
         setPost(res);
-        setFilteredPostArr(res);
       })
       .catch(() => navigate("/"));
+  };
+
+  useEffect(() => {
+    getRes();
   }, []);
 
   console.dir(postsArr);
 
   useEffect(() => {
     if (!searchValue) {
-      setFilteredPostArr(postsArr);
+      sortPosts(postsArr);
       return;
     }
 
@@ -126,7 +129,7 @@ const Posts: React.FC<PostProps> = ({
     setFilteredPostArr(highlightedPosts);
   }, [searchValue, postsArr]);
 
-  useEffect(() => {
+  const sortPosts = (postsArr: Array<PostInfo>) => {
     const sortedPosts = postsArr.slice().sort((postInfoA, postInfoB) => {
       const dateA = new Date(postInfoA.post.created_at);
       const dateB = new Date(postInfoB.post.created_at);
@@ -162,6 +165,11 @@ const Posts: React.FC<PostProps> = ({
       return 0;
     });
     setFilteredPostArr(sortedPosts);
+  };
+
+  useEffect(() => {
+    getRes();
+    sortPosts(postsArr);
   }, [sortOption]);
 
   const allPosts = filteredPostsArr.map((postInfo, index) => (
@@ -192,7 +200,11 @@ const Posts: React.FC<PostProps> = ({
             </Typography>
           </CardContent>
         </CardActionArea>
-        <RatingItem post_id={postInfo.post.id} posts={filteredPostsArr} />
+        <RatingItem
+          post_id={postInfo.post.id}
+          posts={filteredPostsArr}
+          getRes={getRes}
+        />
       </Card>
     </Grid>
   ));

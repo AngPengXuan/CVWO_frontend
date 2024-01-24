@@ -16,6 +16,7 @@ import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 import { onChange, sendRequest, stripHtmlEntities } from "./Functions";
 import { useNavigate } from "react-router-dom";
 import { backendLinks } from "../utils/BackendConfig";
+import RatingItem from "./CommentRating";
 
 const useStyles = makeStyles(() => ({
   commentBody: {
@@ -156,29 +157,23 @@ const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
           </>
         )}
         <CardContent>
-          <Typography variant="body2" component="p">
-            {editableComment ? (
-              // <textarea
-              //   name="content"
-              //   value={editedContentComment}
-              //   onChange={(e) => {
-              //     onChange(e, setEditedContentComment);
-              //   }}
-              // />
-              <TextField
-                id="commentContent"
-                name="content"
-                minRows={3}
-                required
-                value={editedContentComment}
-                onChange={(event) => onChange(event, setEditedContentComment)}
-                style={{ width: "100%", resize: "vertical" }}
-                sx={{ pb: 2 }}
-              />
-            ) : (
-              <span>{highlightedContent || comment.content}</span>
-            )}
-          </Typography>
+          {editableComment ? (
+            <TextField
+              id="commentContent"
+              name="content"
+              minRows={3}
+              required
+              value={editedContentComment}
+              onChange={(event) => onChange(event, setEditedContentComment)}
+              style={{ width: "100%", resize: "vertical" }}
+              sx={{ pb: 2 }}
+            />
+          ) : (
+            <Typography variant="body2" component="p">
+              {highlightedContent || comment.content}
+            </Typography>
+          )}
+
           <Typography
             color="textSecondary"
             className={classes.metadata}
@@ -192,8 +187,8 @@ const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
           {editableComment && (
             <Button onClick={saveChangesComment}>Save</Button>
           )}
-          {/* <RatingItem /> */}
         </CardContent>
+        <RatingItem comment={comment} getRes={getRes} />
       </Card>
     </Grid>
   );

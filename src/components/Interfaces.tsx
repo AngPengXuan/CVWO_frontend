@@ -10,6 +10,11 @@ export interface PostInterface {
   dislike_count: number;
 }
 
+interface CommentRatingInterface {
+  user_id: number;
+  rating: number;
+}
+
 export interface CommentInterface {
   username: string;
   content: string;
@@ -17,6 +22,7 @@ export interface CommentInterface {
   is_owner: boolean;
   id: number;
   created_at: Date;
+  comment_ratings: Array<CommentRatingInterface>;
 }
 
 export interface UpdatedCommentInterface {
@@ -49,6 +55,11 @@ export interface RequestData {
   post_rating?: {
     user_token?: string | null;
     post_id?: number;
+    rating?: number;
+  };
+  comment_rating?: {
+    user_token?: string | null;
+    comment_id?: number;
     rating?: number;
   };
 }

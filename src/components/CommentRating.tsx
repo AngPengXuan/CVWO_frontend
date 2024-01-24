@@ -3,11 +3,10 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import React, { useEffect, useState } from "react";
 import { sendRequest } from "./Functions";
 import { backendLinks } from "../utils/BackendConfig";
-import { useParams } from "react-router-dom";
 import { Button } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
-import { PostInterface } from "./Interfaces";
+import { CommentInterface, PostInterface } from "./Interfaces";
 
 interface PostInfo {
   post: PostInterface;
@@ -15,21 +14,22 @@ interface PostInfo {
 }
 
 type Props = {
-  post_id: number | undefined;
-  posts: Array<PostInfo> | null;
+  //   comment_id: number | undefined;
+  //   comments: Array<PostInfo> | null;
+  comment: CommentInterface;
+  getRes: () => void;
 };
 
 type Ratings = {
   rating: number;
 };
 
-const RatingItem: React.FC<Props> = ({ post_id, posts }) => {
+const RatingItem: React.FC<Props> = ({ comment, getRes }) => {
   const [resp, setResp] = useState();
   const [rating, setRating] = useState(0);
   const [userRating, setUserRating] = useState(0);
-  const params = useParams();
   const token = localStorage.getItem("token");
-  const postId = post_id || Number(params.id);
+  const commentId = comment.id;
   const onThumbUpClick = (rating: number) => {
     return () => {
       if (token == null) {
@@ -37,17 +37,18 @@ const RatingItem: React.FC<Props> = ({ post_id, posts }) => {
         return;
       }
       const updatedBody = {
-        post_rating: {
+        comment_rating: {
           user_token: token,
-          post_id: postId,
+          comment_id: commentId,
           rating: rating,
         },
       };
-      sendRequest(backendLinks.update_post_rating, "PATCH", updatedBody)
+      sendRequest(backendLinks.update_comment_rating, "PATCH", updatedBody)
         .then((response) => {
           console.log(response);
           setResp(response);
           setUserRating(response.rating);
+          getRes();
         })
         .catch((error) => console.log(error.message));
     };
@@ -60,17 +61,18 @@ const RatingItem: React.FC<Props> = ({ post_id, posts }) => {
         return;
       }
       const updatedBody = {
-        post_rating: {
+        comment_rating: {
           user_token: token,
-          post_id: postId,
+          comment_id: commentId,
           rating: rating,
         },
       };
-      sendRequest(backendLinks.update_post_rating, "PATCH", updatedBody)
+      sendRequest(backendLinks.update_comment_rating, "PATCH", updatedBody)
         .then((response) => {
           console.log(response);
           setResp(response);
           setUserRating(response.rating);
+          getRes();
         })
         .catch((error) => console.log(error.message));
     };
@@ -79,15 +81,15 @@ const RatingItem: React.FC<Props> = ({ post_id, posts }) => {
   useEffect(() => {
     //possibility of null token
     const updatedBody = {
-      post_rating: {
+      comment_rating: {
         user_token: token,
-        post_id: postId,
+        comment_id: commentId,
       },
     };
-    sendRequest(backendLinks.show_post_rating, "POST", updatedBody)
+    sendRequest(backendLinks.show_comment_rating, "POST", updatedBody)
       .then((response) => {
-        // console.log(response);
-        const sumOfRatings: number = response.post_ratings.reduce(
+        console.log(response);
+        const sumOfRatings: number = response.comment_ratings.reduce(
           (accumulator: number, currentValue: Ratings) =>
             accumulator + currentValue.rating,
           0
@@ -95,10 +97,12 @@ const RatingItem: React.FC<Props> = ({ post_id, posts }) => {
         setRating(sumOfRatings);
         if (response.user_rating != null) {
           setUserRating(response.user_rating.rating);
+        } else {
+          setUserRating(0);
         }
       })
       .catch((error) => console.log(error.message));
-  }, [resp, posts]);
+  }, [resp, comment]);
 
   return (
     <div>

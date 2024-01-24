@@ -19,7 +19,7 @@ import {
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 import CommentItem from "../../components/CommentItem";
 import { backendLinks } from "../../utils/BackendConfig";
-import RatingItem from "../../components/Rating";
+import RatingItem from "../../components/ThreadRating";
 
 interface PostProps {
   searchValue: string;
@@ -41,6 +41,7 @@ const Post: React.FC<PostProps> = ({
   const [editedCategory, setEditedCategory] = useState("");
   const [content, setContent] = useState("");
   const [comments, setComments] = useState<CommentInterface[]>();
+  const [sortedComments, setSortedComments] = useState<CommentInterface[]>();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleSettingClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -87,27 +88,67 @@ const Post: React.FC<PostProps> = ({
 
   useEffect(() => {
     if (res && res.post) {
+      sortComments(res.comments);
       setEditedTitle(res.post.title);
       setEditedContent(res.post.content);
       setEditedCategory(res.post.category);
       setComments(res.comments);
+      sortComments(res.comments);
     }
   }, [res]);
 
-  useEffect(() => {
-    const sortedPosts = comments?.slice().sort((commentInfoA, commentInfoB) => {
-      const dateA = new Date(commentInfoA.created_at);
-      const dateB = new Date(commentInfoB.created_at);
+  const sortComments = (comments: Array<CommentInterface>) => {
+    const sortedPosts = comments
+      ?.slice()
+      .sort(
+        (commentInfoA: CommentInterface, commentInfoB: CommentInterface) => {
+          const dateA = new Date(commentInfoA.created_at);
+          const dateB = new Date(commentInfoB.created_at);
+          console.dir(comments);
 
-      // Compare the dates
-      if (sortOption == sortOptions[0]) {
-        return dateB.getTime() - dateA.getTime();
-      } else if (sortOption == sortOptions[1]) {
-        return dateA.getTime() - dateB.getTime();
-      }
-      return 0;
+          // Compare the dates
+          if (sortOption == sortOptions[0]) {
+            return dateB.getTime() - dateA.getTime();
+          } else if (sortOption == sortOptions[1]) {
+            return dateA.getTime() - dateB.getTime();
+          } else if (sortOption == sortOptions[2]) {
+            return (
+              commentInfoB.comment_ratings.reduce(
+                (accumulator, currVal) => accumulator + currVal.rating,
+                0
+              ) -
+              commentInfoA.comment_ratings.reduce(
+                (accumulator, currVal) => accumulator + currVal.rating,
+                0
+              )
+            );
+          } else if (sortOption == sortOptions[3]) {
+            return (
+              commentInfoA.comment_ratings.reduce(
+                (accumulator, currVal) => accumulator + currVal.rating,
+                0
+              ) -
+              commentInfoB.comment_ratings.reduce(
+                (accumulator, currVal) => accumulator + currVal.rating,
+                0
+              )
+            );
+          }
+          return 0;
+        }
+      );
+    setSortedComments(sortedPosts);
+  };
+
+  useEffect(() => {
+    const url = backendLinks.show_post + params.id;
+    sendRequest(url, "POST", body).then((res) => {
+      res.post.created_at = new Date(res.post.created_at);
+      res.comments.map((postInfo: CommentInterface) => {
+        postInfo.created_at = new Date(postInfo.created_at);
+      });
+      sortComments(res.comments);
     });
-    setComments(sortedPosts);
   }, [sortOption]);
 
   useEffect(() => {
@@ -236,50 +277,50 @@ const Post: React.FC<PostProps> = ({
               <span>Title: {res && res.post.title}</span>
             )}
           </Typography>
-          <Typography variant="body1" component="p">
-            {editable ? (
-              <>
-                {"Category:"}
-                <br />
-                <TextField
-                  id="postCategory"
-                  name="category"
-                  minRows={3}
-                  required
-                  value={editedCategory}
-                  onChange={(event) => onChange(event, setEditedCategory)}
-                  style={{ width: "100%", resize: "vertical" }}
-                  sx={{ pb: 2 }}
-                />
-              </>
-            ) : (
-              <span>category: {res && res.post.category}</span>
-            )}
-          </Typography>
-          <Typography variant="body2" component="p">
-            {editable ? (
-              <>
-                {"Content:"}
-                <br />
-                <TextField
-                  id="postContent"
-                  name="content"
-                  minRows={3}
-                  required
-                  value={editedContent}
-                  onChange={(event) => onChange(event, setEditedContent)}
-                  style={{ width: "100%", resize: "vertical" }}
-                  sx={{ pb: 2 }}
-                />
-              </>
-            ) : (
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: `${postContent}`,
-                }}
+
+          {editable ? (
+            <>
+              {"Category:"}
+              <br />
+              <TextField
+                id="postCategory"
+                name="category"
+                minRows={3}
+                required
+                value={editedCategory}
+                onChange={(event) => onChange(event, setEditedCategory)}
+                style={{ width: "100%", resize: "vertical" }}
+                sx={{ pb: 2 }}
               />
-            )}
-          </Typography>
+            </>
+          ) : (
+            <Typography variant="body1" component="p">
+              category: {res && res.post.category}
+            </Typography>
+          )}
+
+          {editable ? (
+            <>
+              {"Content:"}
+              <br />
+              <TextField
+                id="postContent"
+                name="content"
+                minRows={3}
+                required
+                value={editedContent}
+                onChange={(event) => onChange(event, setEditedContent)}
+                style={{ width: "100%", resize: "vertical" }}
+                sx={{ pb: 2 }}
+              />
+            </>
+          ) : (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: `${postContent}`,
+              }}
+            />
+          )}
           <Typography color="textSecondary" gutterBottom>
             {"Posted by " +
               res?.post.username +
@@ -295,7 +336,7 @@ const Post: React.FC<PostProps> = ({
         <RatingItem post_id={res?.post.id} posts={null} />
       </Card>
       <div>
-        {comments?.map((comment, index) => (
+        {sortedComments?.map((comment, index) => (
           <CommentItem
             comment={comment}
             getRes={getRes}
