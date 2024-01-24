@@ -31,11 +31,11 @@ yarn dev
 
 ## Additional Notes
 -   This project uses [Typescript](https://www.typescriptlang.org/).
--   Authentication page design was referenced from the following tutorial: [Create a simple React app (TypeScript) with Login / Register pages](https://medium.com/@prabhashi.mm/create-a-simple-react-app-typescript-with-login-register-pages-using-create-react-app-e5c12dd6db53)
 
 ## Acknowledgements
 
-This project was bootstrapped with [Create Vite](https://github.com/vitejs/vite/tree/main/packages/create-vite).
-This project uses [MUI](https://mui.com/),
+1. This project was bootstrapped with [Create Vite](https://github.com/vitejs/vite/tree/main/packages/create-vite).
+2. This project uses [MUI](https://mui.com/),
 [TypewriterJS](https://github.com/tameemsafi/typewriterjs#readme), [Prettier](https://prettier.io/).
+3. Authentication page design was referenced from the following tutorial: [Create a simple React app (TypeScript) with Login / Register pages](https://medium.com/@prabhashi.mm/create-a-simple-react-app-typescript-with-login-register-pages-using-create-react-app-e5c12dd6db53)
 
