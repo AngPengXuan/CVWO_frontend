@@ -27,6 +27,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
         navigate("/threads");
       })
       .catch((err) => {
+        alert("Invalid username or password");
         console.error("Login failed:", err);
       });
   };
