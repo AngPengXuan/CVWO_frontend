@@ -42,8 +42,6 @@ const NewPost: React.FC = () => {
 
     sendRequest(backendLinks.create_post, "POST", body)
       .then((response) => {
-        console.log("hi");
-        console.dir(response);
         navigate(`/post/${response.post.id}`);
       })
       .catch((error) => console.log(error.message));

@@ -46,7 +46,6 @@ const RatingItem: React.FC<Props> = ({ post_id, posts, getRes = null }) => {
       };
       sendRequest(backendLinks.update_post_rating, "PATCH", updatedBody)
         .then((response) => {
-          console.log(response);
           setResp(response);
           setUserRating(response.rating);
           if (getRes != null) {
@@ -72,7 +71,6 @@ const RatingItem: React.FC<Props> = ({ post_id, posts, getRes = null }) => {
       };
       sendRequest(backendLinks.update_post_rating, "PATCH", updatedBody)
         .then((response) => {
-          console.log(response);
           setResp(response);
           setUserRating(response.rating);
           if (getRes != null) {
@@ -93,7 +91,6 @@ const RatingItem: React.FC<Props> = ({ post_id, posts, getRes = null }) => {
     };
     sendRequest(backendLinks.show_post_rating, "POST", updatedBody)
       .then((response) => {
-        // console.log(response);
         const sumOfRatings: number = response.post_ratings.reduce(
           (accumulator: number, currentValue: Ratings) =>
             accumulator + currentValue.rating,
