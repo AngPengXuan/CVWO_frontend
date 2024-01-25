@@ -10,6 +10,7 @@ import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
 import { SelectChangeEvent } from "@mui/material";
 import Home from "./pages/Home";
+import { stripHtmlEntities } from "./components/Functions";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState("token" in localStorage);
@@ -21,8 +22,7 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value;
-    console.log(inputValue);
+    const inputValue = stripHtmlEntities(event.target.value);
     setSearchValue(inputValue);
   };
 

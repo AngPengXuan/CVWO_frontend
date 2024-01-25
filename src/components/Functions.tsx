@@ -35,6 +35,7 @@ export const onChange = (
   setFunction(event.target.value);
 };
 
+//convert special characters to their escaped/encoded values respectively
 export const stripHtmlEntities = (str: string) => {
   return String(str)
     .replace(/\n/g, "<br> <br>")
