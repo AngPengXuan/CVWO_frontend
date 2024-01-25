@@ -33,6 +33,7 @@ interface AppbarProps {
   sortOption: string;
   sortOptions: Array<string>;
   currentRoute: string;
+  searchAndSort: boolean;
 }
 
 // Sets the drawerWidth
@@ -47,17 +48,10 @@ const Navbar: React.FC<AppbarProps> = ({
   sortOption,
   searchValue,
   sortOptions,
-  currentRoute,
+  searchAndSort,
 }: AppbarProps) => {
+  // Configures the drawer open or close
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [searchAndSort, setsearchAndSort] = React.useState(true);
-
-  // Removes search and sort option in Navbar when creating new thread
-  React.useEffect(() => {
-    if (currentRoute.includes("/new_thread")) {
-      setsearchAndSort(false);
-    }
-  }, []);
 
   // Allows for the drawer to be open and closed depending on screen size
   const handleDrawerToggle = () => {

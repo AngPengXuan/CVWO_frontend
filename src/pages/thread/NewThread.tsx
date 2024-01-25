@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   onChange,
@@ -8,13 +8,23 @@ import {
 import { backendLinks } from "../../utils/BackendConfig";
 import { Box, Button, TextField, Typography, Link, Grid } from "@mui/material";
 
+// Interface for new post/thread properties
+interface newPostProps {
+  setsearchAndSort: Dispatch<SetStateAction<boolean>>;
+}
+
 // The new post/thread component
-const NewPost: React.FC = () => {
+const NewPost: React.FC<newPostProps> = ({ setsearchAndSort }) => {
   // Sets the states required
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
+
+  //Removes search and sort field on render
+  React.useEffect(() => {
+    setsearchAndSort(false);
+  }, []);
 
   // Sends a post request with the data when submit button is clicked
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -33,6 +43,7 @@ const NewPost: React.FC = () => {
 
     sendRequest(backendLinks.create_post, "POST", body)
       .then((response) => {
+        setsearchAndSort(true);
         navigate(`/thread/${response.post.id}`);
       })
       .catch((error) => console.log(error.message));

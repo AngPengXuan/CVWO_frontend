@@ -14,6 +14,8 @@ import { stripHtmlEntities } from "./components/Functions";
 
 // Main App component
 function App() {
+  const [searchAndSort, setsearchAndSort] = useState(true);
+
   // gets the token from local storage
   const [loggedIn, setLoggedIn] = useState("token" in localStorage);
 
@@ -57,6 +59,7 @@ function App() {
         handleSort={handleSort}
         sortOptions={sortOptions}
         currentRoute={window.location.pathname}
+        searchAndSort={searchAndSort}
       />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -90,7 +93,7 @@ function App() {
           path="/new_thread"
           element={
             <Protected>
-              <NewPost />
+              <NewPost setsearchAndSort={setsearchAndSort} />
             </Protected>
           }
         />
