@@ -7,30 +7,32 @@ import { useParams } from "react-router-dom";
 import { Button } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
-import { PostInterface } from "./Interfaces";
+import { PostInterface, Ratings } from "./Interfaces";
 
+// Interface for Post/Thread object received from backend
 interface PostInfo {
   post: PostInterface;
   username: string;
 }
 
+// Interface for Rating item properties
 type Props = {
   post_id: number | undefined;
   posts: Array<PostInfo> | null;
   getRes?: () => void | null;
 };
 
-type Ratings = {
-  rating: number;
-};
-
+// Rating item component
 const RatingItem: React.FC<Props> = ({ post_id, posts, getRes = null }) => {
+  // Sets all the states required
   const [resp, setResp] = useState();
   const [rating, setRating] = useState(0);
   const [userRating, setUserRating] = useState(0);
   const params = useParams();
   const token = localStorage.getItem("token");
   const postId = post_id || Number(params.id);
+
+  // Function for when clicking thumbs up button (liking comment)
   const onThumbUpClick = (rating: number) => {
     return () => {
       if (token == null) {
@@ -56,6 +58,7 @@ const RatingItem: React.FC<Props> = ({ post_id, posts, getRes = null }) => {
     };
   };
 
+  // Function for when clicking thumbs down button (disliking comment)
   const onThumbDownClick = (rating: number) => {
     return () => {
       if (token == null) {
@@ -81,6 +84,7 @@ const RatingItem: React.FC<Props> = ({ post_id, posts, getRes = null }) => {
     };
   };
 
+  // Loading in the rating of the post/thread
   useEffect(() => {
     //possibility of null token
     const updatedBody = {
@@ -106,6 +110,7 @@ const RatingItem: React.FC<Props> = ({ post_id, posts, getRes = null }) => {
       .catch((error) => console.log(error.message));
   }, [resp, posts]);
 
+  //Post/Thread rating component
   return (
     <div>
       {userRating == 1 ? (

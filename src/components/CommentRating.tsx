@@ -6,23 +6,24 @@ import { backendLinks } from "../utils/BackendConfig";
 import { Button } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
-import { CommentInterface } from "./Interfaces";
+import { CommentInterface, Ratings } from "./Interfaces";
 
+// Interface for Comment rating properties, takes in comment and Reponse function from CommentItem.tsx
 type Props = {
   comment: CommentInterface;
   getRes: () => void;
 };
 
-type Ratings = {
-  rating: number;
-};
-
+// Rating component for comments
 const RatingItem: React.FC<Props> = ({ comment, getRes }) => {
+  // Sets all the states required
   const [resp, setResp] = useState();
   const [rating, setRating] = useState(0);
   const [userRating, setUserRating] = useState(0);
   const token = localStorage.getItem("token");
   const commentId = comment.id;
+
+  // Function for when clicking thumbs up button (liking comment)
   const onThumbUpClick = (rating: number) => {
     return () => {
       if (token == null) {
@@ -46,6 +47,7 @@ const RatingItem: React.FC<Props> = ({ comment, getRes }) => {
     };
   };
 
+  // Function for when clicking thumbs down button (disliking comment)
   const onThumbDownClick = (rating: number) => {
     return () => {
       if (token == null) {
@@ -69,6 +71,7 @@ const RatingItem: React.FC<Props> = ({ comment, getRes }) => {
     };
   };
 
+  // Loading in the rating of the comment
   useEffect(() => {
     //possibility of null token
     const updatedBody = {
@@ -94,6 +97,7 @@ const RatingItem: React.FC<Props> = ({ comment, getRes }) => {
       .catch((error) => console.log(error.message));
   }, [resp, comment]);
 
+  // Comment rating component
   return (
     <div>
       {userRating == 1 ? (

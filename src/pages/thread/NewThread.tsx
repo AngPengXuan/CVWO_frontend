@@ -1,22 +1,22 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendRequest, stripHtmlEntities } from "../../components/Functions";
+import {
+  onChange,
+  sendRequest,
+  stripHtmlEntities,
+} from "../../components/Functions";
 import { backendLinks } from "../../utils/BackendConfig";
 import { Box, Button, TextField, Typography, Link, Grid } from "@mui/material";
 
+// The new post/thread component
 const NewPost: React.FC = () => {
+  // Sets the states required
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
 
-  const onChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    setFunction: React.Dispatch<React.SetStateAction<string>>
-  ) => {
-    setFunction(event.target.value);
-  };
-
+  // Sends a post request with the data when submit button is clicked
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (title.length == 0 || content.length == 0) return;
@@ -37,6 +37,8 @@ const NewPost: React.FC = () => {
       })
       .catch((error) => console.log(error.message));
   };
+
+  // New post/thread page
   return (
     <Box sx={{ mt: 5 }}>
       <Grid container justifyContent="center">

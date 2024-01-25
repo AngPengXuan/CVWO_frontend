@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { backendLinks } from "../utils/BackendConfig";
 import RatingItem from "./CommentRating";
 
+// Sets the style for comment card
 const useStyles = makeStyles(() => ({
   commentBody: {
     fontSize: 16,
@@ -25,8 +26,6 @@ const useStyles = makeStyles(() => ({
     paddingBottom: "1em",
   },
   commentCard: {
-    // width: "40vw",
-    // textAlign: "center",
     margin: "auto",
     display: "flex",
     flexDirection: "column",
@@ -36,13 +35,16 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+// Interface for Comment properties, takes in values and functions from Thread.tsx
 type Props = {
   comment: CommentInterface;
   searchValue: string;
   getRes: () => void;
 };
 
+// CommentItem component
 const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
+  // Sets all the states required
   const [editableComment, setEditableComment] = useState(false);
   const [editedContentComment, setEditedContentComment] = useState("");
   const classes = useStyles();
@@ -50,20 +52,20 @@ const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
   const navigate = useNavigate();
   const [highlightedContent, setHighlightedContent] = useState<JSX.Element>();
 
+  // Handle setting (the 3 dots on the right)
   const handleSettingClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleSettingClose = () => {
     setAnchorEl(null);
   };
 
+  // Handles Editing and Saving of a comment
   const toggleEditComment = () => {
     handleSettingClose();
     setEditableComment(!editableComment);
     setEditedContentComment(comment.content);
   };
-
   const saveChangesComment = () => {
     const updatedBody = {
       token: localStorage.getItem("token"),
@@ -81,6 +83,7 @@ const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
       .catch((error) => console.log(error.message));
   };
 
+  // Handles deletion of comment
   const deleteComment = (index: number) => {
     return () => {
       handleSettingClose();
@@ -98,6 +101,7 @@ const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
     };
   };
 
+  // Highlights and sorts the searched content whenever anything is typed in search bar
   useEffect(() => {
     if (!searchValue) {
       setHighlightedContent(undefined);
@@ -126,6 +130,7 @@ const CommentItem: React.FC<Props> = ({ comment, getRes, searchValue }) => {
     setHighlightedContent(highlightedContent);
   }, [searchValue]);
 
+  // Comment component
   return (
     <Grid item xs={6} sx={{ mb: 1 }}>
       <Card className={classes.commentCard}>

@@ -23,6 +23,7 @@ import { Search, SearchIconWrapper, StyledInputBase } from "./SearchBar";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterDramaIcon from "@mui/icons-material/FilterDrama";
 
+// Interface for Appbar properties, takes in values and functions from App.tsx
 interface AppbarProps {
   login: Boolean;
   window?: () => Window;
@@ -34,8 +35,10 @@ interface AppbarProps {
   currentRoute: string;
 }
 
+// Sets the drawerWidth
 const drawerWidth = 240;
 
+// Navbar component
 const Navbar: React.FC<AppbarProps> = ({
   login,
   window,
@@ -49,23 +52,28 @@ const Navbar: React.FC<AppbarProps> = ({
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [searchAndSort, setsearchAndSort] = React.useState(true);
 
+  // Removes search and sort option in Navbar when creating new thread
   React.useEffect(() => {
     if (currentRoute.includes("/new_thread")) {
       setsearchAndSort(false);
     }
   }, []);
 
+  // Allows for the drawer to be open and closed depending on screen size
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-  const commonLinks = [["Threads", "/threads"]];
 
+  // Sets the links to be used in Navbar
+  const commonLinks = [["Threads", "/threads"]];
   const navLinks = login
     ? [...commonLinks, ["Create", "/new_thread"], ["Logout", "/logout"]]
     : [...commonLinks, ["Register", "/register"], ["Log in", "/login"]];
 
+  // Sets the forum name, currently as an icon
   const forumName = <FilterDramaIcon />;
 
+  // Creates the drawer with search, sort, and the above links
   const drawer = (
     <Box sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
@@ -121,9 +129,11 @@ const Navbar: React.FC<AppbarProps> = ({
     </Box>
   );
 
+  // Sets the container with body if defined
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
+  // The Navbar and drawer
   return (
     <Box sx={{ flexGrow: 1 }}>
       <CssBaseline />

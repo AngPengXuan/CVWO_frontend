@@ -1,8 +1,8 @@
-// import { InputBase, alpha, styled } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import { SyntheticEvent } from "react";
 
+//Sets the style of search bar
 export const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -45,6 +45,7 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+// Function for handling search
 export const handleSearch = (event: SyntheticEvent) => {
   if (event.nativeEvent instanceof InputEvent) {
     console.log(event.nativeEvent.data);

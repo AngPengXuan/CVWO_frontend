@@ -6,6 +6,7 @@ import { sendRequest } from "../../components/Functions";
 import { Grid } from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";
 
+// Login component
 const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const usernameState = useState("");
   const passwordState = useState("");
@@ -13,10 +14,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const [password] = passwordState;
   const navigate = useNavigate();
 
+  // Sets the JSON body
   const body = {
     user: { username: username, password: password },
   };
 
+  // Sends POST request with JSON body from above
   const handleLogin = () => {
     sendRequest(backendLinks.login, "POST", body)
       .then((res) => {
@@ -27,16 +30,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
         navigate("/threads");
       })
       .catch((err) => {
-        alert("Invalid username or password");
         console.error("Login failed:", err);
       });
   };
+
+  // Creates the register link
   const gridItem = (
     <Grid item>
       <Link to="/register">Don't have an account? Register</Link>
     </Grid>
   );
 
+  // Login page
   return (
     <Authentication
       handle={handleLogin}

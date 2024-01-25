@@ -1,3 +1,5 @@
+// This file contains all the interfaces used across the other files
+
 export interface PostInterface {
   title: string;
   content: string;
@@ -75,3 +77,7 @@ type OnLoginFunction = () => void;
 export interface LoginProps {
   onLogin: OnLoginFunction;
 }
+
+export type Ratings = {
+  rating: number;
+};

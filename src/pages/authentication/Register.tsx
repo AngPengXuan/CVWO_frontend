@@ -6,6 +6,7 @@ import Authentication from "../../components/Authentication";
 import { Grid } from "@mui/material";
 import { backendLinks } from "../../utils/BackendConfig";
 
+// Register component
 const Register: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const usernameState = useState("");
   const passwordState = useState("");
@@ -13,9 +14,12 @@ const Register: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
   const [password] = passwordState;
   const navigate = useNavigate();
 
+  // Sets the JSON body
   const body = {
     user: { username: username, password: password },
   };
+
+  // Sends POST request with JSON body from above
   const handleLogin = () => {
     sendRequest(backendLinks.register, "POST", body)
       .then((res) => {
@@ -31,12 +35,14 @@ const Register: React.FC<LoginProps> = ({ onLogin }: LoginProps) => {
       });
   };
 
+  // Creates the login link
   const gridItem = (
     <Grid item>
       <Link to="/login">Already have an account? Login</Link>
     </Grid>
   );
 
+  // Register page
   return (
     <Authentication
       handle={handleLogin}

@@ -1,6 +1,7 @@
 import { Box, Button, Container, CssBaseline, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+// This is the home page that users will see first
 const Home = () => {
   const backgroundStyle = {
     backgroundImage:

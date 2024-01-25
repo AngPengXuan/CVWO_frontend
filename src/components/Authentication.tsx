@@ -15,6 +15,7 @@ import { handleKeypress } from "./Functions";
 // The Authentication page design is referenced from:
 // https://medium.com/@prabhashi.mm/create-a-simple-react-app-typescript-with-login-register-pages-using-create-react-app-e5c12dd6db53
 
+// Interface for Authentication properties, takes in values and functions from App.tsx
 interface Props {
   handle: () => void;
   usernameState: [string, React.Dispatch<React.SetStateAction<string>>];
@@ -23,6 +24,7 @@ interface Props {
   gridItem: JSX.Element;
 }
 
+// Authentication component
 const Authentication: React.FC<Props> = ({
   handle,
   usernameState,
@@ -33,6 +35,7 @@ const Authentication: React.FC<Props> = ({
   const [username, setUsername] = usernameState;
   const [password, setPassword] = passwordState;
 
+  // The login/signup screen
   return (
     <Container maxWidth="xs">
       <CssBaseline />

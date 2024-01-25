@@ -1,6 +1,7 @@
 import { RequestData } from "./Interfaces";
 import { ChangeEvent } from "react";
 
+// Get the CSRF token
 const getCsrfToken = () => {
   const csrfTokenElement = document.querySelector(
     'meta[name="csrf-token"]'
@@ -8,6 +9,7 @@ const getCsrfToken = () => {
   return csrfTokenElement && csrfTokenElement.content;
 };
 
+// To send requests such as POST, DELETE
 export const sendRequest = (url: string, method: string, data: RequestData) => {
   const token = getCsrfToken();
 
@@ -28,6 +30,7 @@ export const sendRequest = (url: string, method: string, data: RequestData) => {
     .catch((error) => console.log(error.message));
 };
 
+// Function to handle changes to text field
 export const onChange = (
   event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   setFunction: React.Dispatch<React.SetStateAction<string>>
@@ -35,7 +38,7 @@ export const onChange = (
   setFunction(event.target.value);
 };
 
-//convert special characters to their escaped/encoded values respectively
+// Sanitise Html entities in a text field
 export const stripHtmlEntities = (str: string) => {
   return String(str)
     .replace(/\n/g, "<br> <br>")
@@ -43,6 +46,7 @@ export const stripHtmlEntities = (str: string) => {
     .replace(/>/g, "&gt;");
 };
 
+// Handle the ENTER keypress
 export const handleKeypress = (func: () => void) => {
   return (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {

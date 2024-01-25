@@ -1,10 +1,14 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ResponseInterface,
   CommentInterface,
 } from "../../components/Interfaces";
-import { sendRequest, stripHtmlEntities } from "../../components/Functions";
+import {
+  onChange,
+  sendRequest,
+  stripHtmlEntities,
+} from "../../components/Functions";
 import {
   Button,
   Card,
@@ -21,17 +25,20 @@ import CommentItem from "../../components/CommentItem";
 import { backendLinks } from "../../utils/BackendConfig";
 import RatingItem from "../../components/ThreadRating";
 
+// Interface for Post/Thread properties
 interface PostProps {
   searchValue: string;
   sortOption: string;
   sortOptions: Array<string>;
 }
 
+// Post/Thread component, to create a single post/thread with comments
 const Post: React.FC<PostProps> = ({
   searchValue,
   sortOption,
   sortOptions,
 }) => {
+  // Sets all the states required
   const params = useParams();
   const navigate = useNavigate();
   const [res, setRes] = useState<ResponseInterface>();
@@ -44,30 +51,26 @@ const Post: React.FC<PostProps> = ({
   const [sortedComments, setSortedComments] = useState<CommentInterface[]>();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
+  // Handle setting (the 3 dots on the right)
   const handleSettingClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleSettingClose = () => {
     setAnchorEl(null);
   };
 
+  // Makes the thread editable
   const toggleEdit = () => {
     handleSettingClose();
     setEditable(!editable);
   };
 
-  const onChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    setFunction: React.Dispatch<React.SetStateAction<string>>
-  ) => {
-    setFunction(event.target.value);
-  };
-
+  // Get the token from local storage (for authentication)
   const body = {
     token: localStorage.getItem("token"),
   };
 
+  // Get Response function that sends POST request to obtain comments and post/thread
   const getRes = () => {
     const url = backendLinks.show_post + params.id;
     sendRequest(url, "POST", body)
@@ -81,10 +84,12 @@ const Post: React.FC<PostProps> = ({
       .catch(() => navigate("/threads"));
   };
 
+  //Get the thread and comments when the parameter id changes
   useEffect(() => {
     getRes();
   }, [params.id]);
 
+  // Sets the comment and thread data when there are changes
   useEffect(() => {
     if (res && res.post) {
       sortComments(res.comments);
@@ -96,6 +101,7 @@ const Post: React.FC<PostProps> = ({
     }
   }, [res]);
 
+  // Sorts the comments based on date or rating
   const sortComments = (comments: Array<CommentInterface>) => {
     const sortedPosts = comments
       ?.slice()
@@ -138,6 +144,7 @@ const Post: React.FC<PostProps> = ({
     setSortedComments(sortedPosts);
   };
 
+  // sort the comments whenever the sort option is changed
   useEffect(() => {
     const url = backendLinks.show_post + params.id;
     sendRequest(url, "POST", body).then((res) => {
@@ -149,6 +156,7 @@ const Post: React.FC<PostProps> = ({
     });
   }, [sortOption]);
 
+  // Search for relevant words whenever anything is typed in search bar
   useEffect(() => {
     if (!searchValue) {
       setComments(comments);
@@ -168,10 +176,12 @@ const Post: React.FC<PostProps> = ({
     setComments(updatedComments);
   }, [searchValue]);
 
+  // Add back HTML entities that were removed
   const addHtmlEntities = (str: string) => {
     return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
   };
 
+  // Handles deletion of post/thread
   const deletePost = () => {
     const url = backendLinks.destroy_post + params.id;
     sendRequest(url, "DELETE", body)
@@ -179,6 +189,7 @@ const Post: React.FC<PostProps> = ({
       .catch((error) => console.log(error.message));
   };
 
+  // Handles Updating of post/thread
   const saveChanges = () => {
     const url = backendLinks.update_post + params.id;
     const updatedBody = {
@@ -200,6 +211,7 @@ const Post: React.FC<PostProps> = ({
 
   const postContent = res && addHtmlEntities(res.post.content);
 
+  // Creation of comments
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (content.length == 0) return;
@@ -220,6 +232,7 @@ const Post: React.FC<PostProps> = ({
       .catch((error) => console.log(error));
   };
 
+  // Thread/Post page
   return (
     <Box sx={{ px: 5 }}>
       <Card

@@ -12,6 +12,7 @@ import {
 import { backendLinks } from "../../utils/BackendConfig";
 import RatingItem from "../../components/ThreadRating";
 
+// All the interfaces required for the page
 interface PostProps {
   searchValue: string;
   sortOption: string;
@@ -32,15 +33,18 @@ interface PostInfo {
   username: string;
 }
 
+// Component to render all the threads/posts
 const Posts: React.FC<PostProps> = ({
   searchValue,
   sortOption,
   sortOptions,
 }) => {
+  //Sets the states required
   const navigate = useNavigate();
   const [postsArr, setPost] = useState<PostInfo[]>([]);
   const [filteredPostsArr, setFilteredPostArr] = useState<PostInfo[]>([]);
 
+  // Function to get response, getting all the thread/post data
   const getRes = () => {
     fetch(backendLinks.show_all_post)
       .then((res) => {
@@ -58,10 +62,12 @@ const Posts: React.FC<PostProps> = ({
       .catch(() => navigate("/"));
   };
 
+  // Gets all the thread/post data everytime page is loaded
   useEffect(() => {
     getRes();
   }, []);
 
+  // Handles searching everytime something is typed in search bar
   useEffect(() => {
     if (!searchValue) {
       sortPosts(postsArr);
@@ -126,6 +132,7 @@ const Posts: React.FC<PostProps> = ({
     setFilteredPostArr(highlightedPosts);
   }, [searchValue, postsArr]);
 
+  // Sort the Threads/Posts by rating/date
   const sortPosts = (postsArr: Array<PostInfo>) => {
     const sortedPosts = postsArr.slice().sort((postInfoA, postInfoB) => {
       const dateA = new Date(postInfoA.post.created_at);
@@ -164,11 +171,13 @@ const Posts: React.FC<PostProps> = ({
     setFilteredPostArr(sortedPosts);
   };
 
+  // Sort the Threads/Posts by rating/date whenever the sort option changes
   useEffect(() => {
     getRes();
     sortPosts(postsArr);
   }, [sortOption]);
 
+  // Renders all the post/threads
   const allPosts = filteredPostsArr.map((postInfo, index) => (
     <Grid item xs={12} key={index} sx={{ mb: 3 }}>
       <Card key={index}>
@@ -206,6 +215,7 @@ const Posts: React.FC<PostProps> = ({
     </Grid>
   ));
 
+  // Default when there are no post/threads yet
   const noPost = (
     <div>
       <h3>

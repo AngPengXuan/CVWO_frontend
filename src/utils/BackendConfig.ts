@@ -1,5 +1,6 @@
 import { backendLink } from "./DeploymentConfig";
 
+// Creates all the API to backend
 export const backendLinks = {
     login: backendLink + "login",
     register: backendLink + "register",

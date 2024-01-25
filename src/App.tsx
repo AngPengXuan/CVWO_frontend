@@ -12,32 +12,41 @@ import { SelectChangeEvent } from "@mui/material";
 import Home from "./pages/Home";
 import { stripHtmlEntities } from "./components/Functions";
 
+// Main App component
 function App() {
+  // gets the token from local storage
   const [loggedIn, setLoggedIn] = useState("token" in localStorage);
 
+  //Function to handle login
   const handleLogin = () => {
     setLoggedIn("token" in localStorage);
   };
 
+  // Set the search state
   const [searchValue, setSearchValue] = useState("");
 
+  // Function to handle search event
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = stripHtmlEntities(event.target.value);
     setSearchValue(inputValue);
   };
 
+  // Creates the sort options
   const sortOptions = [
     "date \u2193",
     "date \u2191",
     "rating \u2193",
     "rating \u2191",
   ];
-  //sets default value as da (date ascending)
+  //sets default value as date ascending
   const [sortOption, setSortOption] = useState(sortOptions[0]);
+
+  // Handle sort event
   const handleSort = (event: SelectChangeEvent) => {
     setSortOption(event.target.value as string);
   };
 
+  // Creates all the routes required
   return (
     <BrowserRouter>
       <Navbar
