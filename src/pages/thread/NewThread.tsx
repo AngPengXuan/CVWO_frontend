@@ -33,7 +33,7 @@ const NewPost: React.FC = () => {
 
     sendRequest(backendLinks.create_post, "POST", body)
       .then((response) => {
-        navigate(`/post/${response.post.id}`);
+        navigate(`/thread/${response.post.id}`);
       })
       .catch((error) => console.log(error.message));
   };
